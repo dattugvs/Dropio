@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Drop</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="/css/drop.css">
+    <link rel="stylesheet" type="text/css" href="/css/tabs.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body >
+    <!-- oncontextmenu="return false" onkeydown="return false;" onmousedown="return false;"> -->
+    <div class="modal fade" id="fileviewModal" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+    <div class="modal-body">
+
+       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" style="color: white;">&times;</span>
+        </button>
+
+        <div class="embed-responsive embed-responsive-16by9 video hidden">
+            <video controls="controls" id="playvideo" src="" controlsList="nodownload">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <div class="audio hidden">
+            <center>
+                <audio controls="controls" id="playaudio" src="" controlsList="nodownload">
+                    Your browser does not support the video tag.
+                </audio>
+
+            </center>
+        </div>
+
+        <div class="image hidden">
+            <img id="imgsrc" src="" alt="Oops! Image not loaded due to some problem !!">
+        </div>
+
+        <div class="pdf hidden">
+            <iframe id="pdfsrc" src="" width="800px" height="600px"></iframe>
+        </div>
+
+        <div class="doc hidden">
+            <h4 id="#docfileTitle"></h4>
+        </div>
+    </div>
+  </div>
+</div> 
+            </div>
+    <div class="drop">
+        <div class="col-md-10 dropOptions">
+            <div id="options">
+                <br>
+                <h4>drop.io/<%= drop.drop %></h4>
+                <div class="buttons">
+                    <button type="button" class="btn btn-default btn-xl" id="btn-addFiles">
+                        <div class="btn-icon">
+                            <i class="fa fa-plus-circle fa-2x"></i>
+                        </div>
+                        <div class="btn-text">
+                            <b>Add</b>
+                            <br>
+                        </div>
+                    </button>
+                    <button type="button" class="btn btn-default btn-xl" id="btn-shareFiles">
+                        <div class="btn-icon">
+                            <i class="fa fa-share-alt fa-2x"></i>
+                        </div>
+                        <div class="btn-text">
+                            <b>Share by</b>
+                            <br>
+                        </div>
+                    </button>
+                </div>
+            </div>
+            <br>
+            <div id="addFiles" class="hidden">
+                <div class="vertical-tabs">
+                    <ul class="tabs vertical" data-tab="">
+                        <li class="tab-title active"><a href="#add_files" aria-selected="true" tabindex="0">Files</a></li>
+                        <li class="tab-title"><a href="#add_notes" aria-selected="false" tabindex="-1">Notes</a></li>
+                        <li class="tab-title"><a href="#add_links" aria-selected="false" tabindex="-1">Links</a></li>
+                        <li class="tab-title"><a href="#add_emails" aria-selected="false" tabindex="-1">Emails</a></li>
+                    </ul>
+                    <div class="tabs-content">
+                        <div class="content active" id="add_files" aria-hidden="false">
+                            <form method="post" action="/<%= drop.drop %>"
+                                enctype="multipart/form-data">
+                                <div class="file-drop-area">
+                                    <i class="fa fa-files-o fa-2x"></i>
+                                    <span class="file-msg js-set-number">&nbsp;Add Files (Select, Drag & Drop)</span>
+                                    <input class="file-input" type="file" multiple name="files"   multiple="true" required>
+                                </div>
+                                <br>
+                                <progress class="progress" max="100" value="56"></progress>
+                                <br>
+                                <button class="btn btn-success">Add Files</button>
+                            </form>
+                        </div>
+                        <div class="content" id="add_notes" aria-hidden="true" tabindex="-1">
+                            <form method="post" action="/<%= drop.drop %>"
+                                enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <h4>Add Notes:</h4>
+                                    Notes Title:
+                                    <textarea  class="form-control" name="notesTitle" rows="1"></textarea>
+                                    <br>
+                                    Notes
+                                    <textarea class="notes form-control" name="notes" onkeyup="textAreaAdjust(this)" autofocus></textarea>
+                                </div>
+                                <button class="btn btn-success">Add Notes</button>
+                            </form>
+                        </div>
+                        <div class="content" id="add_links" aria-hidden="true" tabindex="-1">
+                            <div class="container">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a data-toggle="tab" href="#content1" class="nav-link">Link - 1</a></li>
+                                    &nbsp;
+                                    <button type="button" class="btn btn-primary" onclick="addNewTab()">Add new Tab</button>
+                                </ul>
+                                <div class="tab-content">
+                                    <div id="content1" class="tab-pane fade in active">
+                                        Link Title :
+                                        <textarea class="form-control" rows="1" id="link1" autofocus></textarea>
+                                        URL :
+                                        <textarea class="form-control" rows="1" id="txt-link1"></textarea>
+                                        Comments :
+                                        <textarea class="form-control" rows="2" id="txt-comment1"></textarea>
+                                    </div>
+                                </div>
+                                <br>
+                                <!-- <button class="btn btn-success">Add Links</button> -->
+                            </div>
+                        </div>
+                        <div class="content" id="add_emails" aria-hidden="true" tabindex="-1">
+                            Email :
+                            <input type="email" name="email" autofocus>
+                            <br>
+                            <br>
+                            <p><b>&rArr; </b>Email will be verified</p>
+                            <p><b>&rArr; </b>Notifications on drop updates will be sent to this email.</p>
+                            <p><b>&rArr; </b>This email can be removed by the drop 'admin' with/without notifying you.</p>
+                            <button class="btn btn-success">Add Email</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="shareFiles" class="hidden">
+                <div class="vertical-tabs">
+                    <ul class="tabs vertical" data-tab="">
+                        <li class="tab-title active"><a href="#emailShare" aria-selected="true" tabindex="0">Email</a></li>
+                        <li class="tab-title"><a href="#emailAlerts" aria-selected="true" tabindex="0">Email Alerts</a></li>
+                    </ul>
+                    <div class="tabs-content">
+                        <div class="content shareContent active" id="emailShare" aria-hidden="true" tabindex="-1">
+                            <div class="float col-md-4">
+                                <br>
+                                <br>
+                                <center>Email :
+                                    <input type="email" name="email" autofocus>
+                                    <br>
+                                    <br>
+                                    <button class="btn btn-success">Share Files</button>
+                                </center>
+                            </div>
+                            <div class="float col-md-4 shareEmail">
+                                <br>
+                                <p><b>&rArr; </b>Email will be verified</p>
+                                <p><b>&rArr; </b>Notifications on drop updates will be sent to this email.</p>
+                                <p><b>&rArr; </b>This email can be removed by the drop 'admin' with/without notifying you.</p>
+                            </div>
+                        </div>
+                        <div class="content shareContent" id="emailAlerts" aria-hidden="true" tabindex="-1">
+                            <div class="float col-md-4">
+                                <br>
+                                <br>
+                                <center>Email :
+                                    <input type="email" name="email" autofocus>
+                                    <br>
+                                    <br>
+                                    <button class="btn btn-success">Submit</button>
+                            </div>
+                            </center>
+                            <div class="float col-md-4 alertEmail">
+                                <br>
+                                <p><b>&rArr; </b>Email will be verified</p>
+                                <p><b>&rArr; </b>Notifications on drop updates will be sent to this email.</p>
+                                <p><b>&rArr; </b>This email can be removed by the drop 'admin' with/without notifying you.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="Dropfiles col-md-10">
+                <br>
+                <div class="dfiles" id="dfiles">
+        </div>
+    </div>
+</div>
+        <div class="col-md-2 settings">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+        </div>
+    </div>
+    <div style="clear:both;"></div>
+    </div>
+    <br>
+    <script type="text/javascript" src="/js/drop.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,101 @@
+<html>
+<head>
+ 	<title>Dropio</title>
+ 	<link rel="stylesheet" type="text/css" href="./css/index.css">
+ 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.6/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div class="col-md-12 dropio">
+		<div class="col-md-4 dropInfo">
+			<br><br>
+			<h3>Each drop is : </h3>
+			<p>A place for storing and sharing photos, video, audio, notes, docs, etc. Each is accessible only to those whom you tell exactly where to look.</p>
+			<p>No signup and no 'account'. We don't even ask for your email. Create as many drops as you want, and access each at : <b>drop.io./thedropname</b></p>
+			<a href="/about"><p>Learn More here.</p></a>
+			<h3>useful for :</h3>
+			<ul>
+				<li>privately sharing pictures & video</li>
+				<li>transferring files to yourself</li>
+				<li>sharing documents with co-workers</li>
+				<li>creating instant collaboration space</li>
+				<li>posting your resume privately</li>
+				<li>and more !</li>
+			</ul>
+			<p>&copy; 2018 <a href="">Drop.io</a>, all rights reserved.</p>
+		</div>
+		<div class="col-md-6 newDrop">
+			<h2>Create a new drop:</h2>
+			<form id="myForm" method="post" action="/" 
+			  enctype="multipart/form-data">
+				<div class="files">
+					<div class="file-drop-area">
+		          <i class="fa fa-files-o fa-2x"></i>
+		          <span class="file-msg js-set-number">&nbsp;Add Files (Select, Drag & Drop)</span>
+		          <input class="file-input" type="file" multiple name="files"   multiple="true" required>
+	        	</div>
+				<br>
+				<progress class="progress" max="100" value="0"></progress>
+				<br>
+				</div>
+				<div>
+					<b>Name of the Drop:</b>
+					<span style="display:inline-block; width: 42px;"></span>
+					drop.io/&nbsp;
+					<input type="text" id="drop" name="drop" onblur="DropName()">
+					<div id="min">
+						<ul><li>Drop name must be a minimum of 5 characters</li></ul>
+					</div>
+				</div>
+				<div>
+					<b>Add a Password:</b>
+					<span style="display:inline-block; width: 125px;"></span>
+					<input type="password" id="password" name="password"> (optional)
+				</div>
+				<div>
+					<br>
+					<b>Expire drop after:</b>
+					<span style="display:inline-block; width: 120px;"></span>
+					<select name="expire" id="expire">
+						<option value="0" disabled="true" selected>Select</option>
+						<option value="1d">1 day</option>
+						<option value="1w">1 week</option>
+					  	<option value="1m">1 month</option>
+					  	<option value="6m">6 months</option>
+					  	<option value="1y">1 year</option>
+					</select>
+				</div>
+				<div>
+					<br>
+					<b>Others can:</b>
+					<span style="display:inline-block; width: 170px;"></span>
+					<input type="checkbox" name="guests"  value="addFiles">Add Files
+					<br>
+					<span style="display:inline-block; width: 260px;"></span>
+					<input type="checkbox" name="guests"  value="comments">Add Comments
+					<br>
+					<span style="display:inline-block; width: 260px;"></span>
+					<input type="checkbox" name="guests"  value="downloads">Download Files
+					<br>
+					<span style="display:inline-block; width: 260px;"></span>
+					<input type="checkbox" name="guests"  value="share">Share Files
+					<br>
+					<span style="display:inline-block; width: 260px;"></span>
+					<input type="checkbox" name="guests"  value="delete">Delete Files
+				</div>
+				<br><br>
+				<center>
+					<input type="submit" class="btn" value="Drop it.">
+				</center>
+			</form>
+		</div>
+	</div>
+<script type="text/javascript" src="./js/index.js"></script>
+</body>
+</html>

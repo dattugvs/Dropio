@@ -1,0 +1,199 @@
+.btn-xl {
+    padding: 10px 20px;
+    font-size: 5%;
+    width:150px;
+}
+.dropOptions {
+	display: inline-block;
+	float: left;
+}
+.settings {
+	display: inline-block;
+	float: left;
+}
+.btn-icon {
+	display: inline-block;
+	float: left;
+	vertical-align: middle;
+}
+.btn-text {
+	text-align: middle;
+	margin-top: 5px;
+}
+button {
+	cursor: pointer;
+	outline: none;
+}
+
+.hidden{
+       display:none;
+}
+.fa-plus-circle {
+	color: black;
+}
+
+.fa-eye {
+	color: 	black;
+}
+
+.fa-share-alt {
+	color: black;
+}
+
+.file-drop-area {
+  border: 3px dashed #ddd;
+  position: relative;
+  width: 100%;
+  padding: 26px 20px 30px;
+  -webkit-transition: 0.2s;
+  transition: 0.2s;
+  background-color:#f1f1f1;
+  
+}
+
+.file-drop-area:hover, .file-drop-area.is-active:hover {
+  background-color: #263238;
+  color: #aaa;
+  border: 3px solid #263238;
+}
+
+.file-msg {
+  font-size: large;
+  font-weight: 300;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
+
+.file-input {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  cursor: pointer;
+  opacity: 0;
+}
+.file-input:focus {
+  outline: none;
+}
+
+progress {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100px;
+  border: none;
+}
+
+progress:after {
+  display: block;
+  width: 5ch;
+  content: attr(value) "%";
+  flex-shrink: 0;
+  margin-left: 1rem;
+}
+
+progress::-webkit-progress-bar {
+  background-color: #e6e6e6;
+}
+
+progress::-webkit-progress-value {
+  background-color: crimson;
+  transition: width 280ms ease-in-out;
+}
+
+.Dropfiles {
+  /*border: 1px solid #C0C0C0;*/
+}
+.files-head {
+  border-bottom: 1px solid #C0C0C0;
+  width: 100%;
+}
+
+.dfiles {
+
+}
+.fileList {
+  border: 1px solid black;
+}
+.filesType {
+  background-color: #C0C0C0;
+}
+.preview {
+  margin-top: 85px;
+  width: 200px;
+  height: 40px;
+  background-color: #C0C0C0;
+  overflow: hidden;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.fileBody {
+
+  width: 200px;
+  height: 150px;
+  /*background-color: blue;*/
+  border: 1px solid black;
+  margin-left: 22px;
+  margin-bottom: 22px;
+  margin-top: 12px;
+  vertical-align: middle;
+  cursor: default;
+}
+
+.fileHover {
+  width: 200px;
+  height: 150px;
+}
+
+.fileTitle {
+  width: 200px;
+  height: 70px;
+  overflow: hidden;
+}
+.downloads {
+  width: 200px;
+  height: 80px;
+}
+
+.modal-dialog {
+  max-width: 800px;
+  margin: 30px auto;
+}
+
+.modal-body {
+  position:relative;
+  padding:0px;
+}
+.close {
+  position:absolute;
+  right:-30px;
+  top:0;
+  z-index:999;
+  font-size:2rem;
+  font-weight: normal;
+  color:#fff;
+  opacity:1;
+}
+.modal-dialog {
+  width: auto;
+  height: auto;
+  left:0; right:0;
+  top:0; bottom:0;
+  margin:auto;
+  max-width:100%;
+  max-height:100%;
+}
+
+.fileview {
+  /*margin-top: 30px;*/
+}
+#imgsrc {
+  width: 100%;
+  height: 100%;
+}

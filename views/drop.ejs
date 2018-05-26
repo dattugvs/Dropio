@@ -13,6 +13,7 @@
     <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.7.0/moment.js"></script>
     <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
 </head>
@@ -30,19 +31,19 @@
 
         <div class="embed-responsive embed-responsive-16by9 video hidden">
             <video controls="controls" id="playvideo" src="" controlsList="nodownload">
-                Your browser does not support the video tag.
+                Your browser does not support the video.
             </video>
         </div>
 
         <div class="audio hidden">
             <center>
                 <audio controls="controls" id="playaudio" src="" controlsList="nodownload">
-                    Your browser does not support the video tag.
+                    Your browser does not support the audio.
                 </audio>
 
             </center>
         </div>
-
+        
         <div class="image hidden">
             <img id="imgsrc" src="" alt="Oops! Image not loaded due to some problem !!">
         </div>
@@ -52,7 +53,7 @@
         </div>
 
         <div class="doc hidden">
-            <h4 id="#docfileTitle"></h4>
+            <div id="#docfileTitle"></div>
         </div>
     </div>
   </div>
@@ -64,7 +65,7 @@
                 <br>
                 <h4>drop.io/<%= drop.drop %></h4>
                 <div class="buttons">
-                    <button type="button" class="btn btn-default btn-xl" id="btn-addFiles">
+                    <button type="button" class="btn btn-default btn-xl" id="btn-addFiles" style="display: none;">
                         <div class="btn-icon">
                             <i class="fa fa-plus-circle fa-2x"></i>
                         </div>
@@ -73,7 +74,7 @@
                             <br>
                         </div>
                     </button>
-                    <button type="button" class="btn btn-default btn-xl" id="btn-shareFiles">
+                    <button type="button" class="btn btn-default btn-xl" id="btn-shareFiles" style="display: none;">
                         <div class="btn-icon">
                             <i class="fa fa-share-alt fa-2x"></i>
                         </div>

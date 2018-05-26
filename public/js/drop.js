@@ -17,8 +17,6 @@ $().ready(function(){
          .parent('ul.tabs').siblings('.tabs-content').children('.content').removeClass('active')
          .eq(index).addClass('active');
   });
-  $('#btn-addFiles').hide();
-  $('#btn-shareFiles').hide();
   getFiles();
 });
 
@@ -49,6 +47,25 @@ function setViews()
 {
 	$('.dfiles').html('');
 	Media();
+}
+
+function showNotes(notes, title)
+{
+	if(!notes.length) return;
+
+	var div = '<div class="fileList col-md-12"><div class="filesType col-md-12"><i class="fa fa-picture-o fa-2x" aria-hidden="true"></i>&nbsp;<span><b>'+title+'</b></span></div><div class="row rfiles col-md-12">';
+	for(var i=0; i<notes.length; i++)
+	{
+		var div2;
+		var timestamp = notes[i]._id.toString().substring(0,8);
+		var date = new Date( parseInt( timestamp, 16 ) * 1000 );
+		var time = moment(date).format('ddd DD-MM-YYYY hh:mm A');
+		console.log(notes[i]);	
+		div2 = '<div class="dnotes col-md-12" style="cursor:default;"><br><h5>'+notes[i].title+'</h5>'+notes[i].notes+'<br><br><div class="notesDetails">'+time+'<span style="display:inline-block; width: 20px;"></span><span class="comments fileBody hidden" style="border:none;" id="Notes_'+i+'" data-placement="bottom" title="Comment" data-toggle="modal" data-target="#fileviewModal"><i class="fa fa-commenting-o" style="font-size:20px;" aria-hidden="true"></i></span></div></div>';
+		div = div + div2+'<hr>';
+	}
+	div = div + '</div></div><br>';
+	$('.dfiles').append(div);
 }
 
 function showFiles(files, title)
@@ -136,8 +153,8 @@ function Media()
 	var len = pdf.length;
 	for(var i=0; i<docs.length; i++)
 		pdf.push(docs[i]);
+	showNotes(notes,'Notes');
 	showFiles(images,'Images');
-	// showNotes(notes,'Notes');
 	showFiles(audio, 'Audio');
 	showFiles(video, 'Video');
 	showFiles(pdf, 'Documents');
@@ -194,7 +211,7 @@ $(document).on("mouseleave", ".fileHover", function() {
     $(hid).hide();
 });
 
-$(document).on("click", ".download", function(event) {
+$(document).on("click", ".downloads", function(event) {
 	event.stopPropagation();
 	alert("Oops!! haha!! lol!!\nNo download option")
 });
@@ -249,7 +266,7 @@ $(document).on("click", ".fileBody", function() {
     	$('#pdfsrc').attr('src',src);
     	$('.modal-content').css('width','840px');
     }
-    else if(this.id.search("Documents")==0)
+    else
     {
     	$('.image').hide();
     	$('.video').hide();
@@ -257,13 +274,17 @@ $(document).on("click", ".fileBody", function() {
     	$('.pdf').hide();
     	$('.doc').show();
     	$('.modal-content').css('width','600px');
-    	var fname;
+    	var text;
 		if(this.id.search("Documents")==0)
-			fname = pdf[(this.id).split('Documents_')[1]];
+			text = "<h4>File Name : " + pdf[(this.id).split('Documents_')[1]]+'</h4><br>';
+		else if(this.id.search("Others")==0)
+			text = "<h4>File Name : " + others[(this.id).split('Others_')[1]]+'</h4><br>';
 		else
-			fname = pdf[(this.id).split('Others_')[1]];
-		var text = "File Name : " + fname;
-    	$(".doc h4").html(text);
+		{
+			var note = notes[(this.id).split('Notes_')[1]];
+			text = "Notes : <h5>"+note.title+'</h5>'+note.notes+'<br>';
+		}
+		$(".doc div").html(text);
 
 
     }

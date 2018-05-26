@@ -7,6 +7,7 @@
 	display: inline-block;
 	float: left;
 }
+
 .settings {
 	display: inline-block;
 	float: left;
@@ -125,7 +126,7 @@ progress::-webkit-progress-value {
 }
 .preview {
   margin-top: 85px;
-  width: 200px;
+  width: 199px;
   height: 40px;
   background-color: #C0C0C0;
   overflow: hidden;
@@ -137,7 +138,6 @@ progress::-webkit-progress-value {
 
   width: 200px;
   height: 150px;
-  /*background-color: blue;*/
   border: 1px solid black;
   margin-left: 22px;
   margin-bottom: 22px;

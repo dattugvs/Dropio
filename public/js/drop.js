@@ -213,7 +213,10 @@ $(document).on("mouseleave", ".fileHover", function() {
 
 $(document).on("click", ".downloads", function(event) {
 	event.stopPropagation();
-	alert("Oops!! haha!! lol!!\nNo download option")
+	var fname = $($(this).parent().parent().prev()).text(); // this gets the file name from fileTitle class
+	url = '/downloads/'+dropName+'/'+fname;
+	var dwindow = window.open(url,'location=no');
+
 });
 
 

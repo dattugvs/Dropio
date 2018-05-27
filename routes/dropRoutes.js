@@ -1,4 +1,6 @@
 var models = require('../models/schema');
+var fs = require('fs');
+
 module.exports = function (app)
 {
 	app.get('/drop.io', (req, res)=> {
@@ -10,7 +12,7 @@ module.exports = function (app)
 			if(drop)
 				res.render('drop',{drop:drop});
 			else
-				res.redirect('/');
+				res.render('404',{'data':{'type':'drop', 'status':'404', 'page_title':'Drop'}});
 		});
 	});
 
@@ -21,5 +23,15 @@ module.exports = function (app)
 			else
 				res.redirect('{}');
 		});
+	});
+
+	app.get('/downloads/:drop/:file', (req,res)=> {
+		var drop = req.params.drop;
+		var file = req.params.file;
+		var path = './public/uploads/'+drop+'/'+file;
+		if (fs.existsSync(path))
+			res.download(path);
+		else
+			res.render('404',{'data':{'type':'file', 'status':'404', 'page_title':'Drop File Download'}});
 	});
 }

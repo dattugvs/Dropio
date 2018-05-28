@@ -59,8 +59,7 @@ function showNotes(notes, title)
 		var div2;
 		var timestamp = notes[i]._id.toString().substring(0,8);
 		var date = new Date( parseInt( timestamp, 16 ) * 1000 );
-		var time = moment(date).format('ddd DD-MM-YYYY hh:mm A');
-		console.log(notes[i]);	
+		var time = moment(date).format('ddd DD-MM-YYYY hh:mm A');	
 		div2 = '<div class="dnotes col-md-12" style="cursor:default;"><br><h5>'+notes[i].title+'</h5>'+notes[i].notes+'<br><br><div class="notesDetails">'+time+'<span style="display:inline-block; width: 20px;"></span><span class="comments fileBody hidden" style="border:none;" id="Notes_'+i+'" data-placement="bottom" title="Comment" data-toggle="modal" data-target="#fileviewModal"><i class="fa fa-commenting-o" style="font-size:20px;" aria-hidden="true"></i></span></div></div>';
 		div = div + div2+'<hr>';
 	}
@@ -76,25 +75,25 @@ function showFiles(files, title)
 	for(var i=0; i<files.length; i++)
 	{
 		var div2;
-		var arr = files[i].split('.');
+		var arr = files[i].fname.split('.');
 		var ext = (arr[arr.length-1]).toLowerCase();
 		if(ext == 'jpg' || ext == '.png' || ext == 'jpeg' || ext == 'bmp' || ext == 'gif')
-			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i]+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview"><img src="/uploads/'+dropName+'/'+files[i]+'" width="200px" height="150px"></div></div>';
+			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview"><img src="/uploads/'+dropName+'/'+files[i].fname+'" width="200px" height="150px"></div></div>';
 		
 		else if(ext == 'mp3' || ext=="ogg" || ext=="wav")
-			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i]+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-volume-up fa-4x" aria-hidden="true"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-volume-up" style="font-size:20px;"aria-hidden="true"></i>&nbsp;&nbsp;'+files[i]+'</div></div></div>';
+			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-volume-up fa-4x" aria-hidden="true"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-volume-up" style="font-size:20px;"aria-hidden="true"></i>&nbsp;&nbsp;'+files[i].fname+'</div></div></div>';
 		
 		else if(ext == "mp4" || ext == "webm" || ext == "mkv")
-			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal"  data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i]+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-video-camera" aria-hidden="true" style="font-size:64px;color:red"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-video-camera" style="font-size:20px; " aria-hidden="true"></i>&nbsp;&nbsp;'+files[i]+'</div></div></div>';		
+			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal"  data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-film" aria-hidden="true" style="font-size:64px;color:red"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-film" style="font-size:20px; " aria-hidden="true"></i>&nbsp;&nbsp;'+files[i].fname+'</div></div></div>';		
 		
 		else if(ext == 'pdf' || ext == 'odf')
-			div2 = '<div id="pdf_'+i+'" class="fileBody" data-toggle="modal"  data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i]+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-file-pdf-o" aria-hidden="true" style="font-size:64px;color:red"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-file-pdf-o" aria-hidden="true" style="font-size:20px; color:red"></i>&nbsp;&nbsp;'+files[i]+'</div></div></div>';
+			div2 = '<div id="pdf_'+i+'" class="fileBody" data-toggle="modal"  data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-file-pdf-o" aria-hidden="true" style="font-size:64px;color:red"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-file-pdf-o" aria-hidden="true" style="font-size:20px; color:red"></i>&nbsp;&nbsp;'+files[i].fname+'</div></div></div>';
 		
 		else if(ext== 'doc' || ext == 'docx' || ext =="txt" || ext == "html" || ext=="xml" || ext == "rtf")
-			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i]+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-file-text"  fa-4x style="font-size:64px;color:blue;" aria-hidden="true"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-file-text" style="font-size:20px; color:blue;" aria-hidden="true"></i>&nbsp;&nbsp;'+files[i]+'</div></div></div>';
+			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-file-text"  fa-4x style="font-size:64px;color:blue;" aria-hidden="true"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-file-text" style="font-size:20px; color:blue;" aria-hidden="true"></i>&nbsp;&nbsp;'+files[i].fname+'</div></div></div>';
 		
 		else
-			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i]+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-files-o"  fa-4x style="font-size:64px;color:blue;" aria-hidden="true"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-files-o" style="font-size:20px; color:blue;" aria-hidden="true"></i>&nbsp;&nbsp;'+files[i]+'</div></div></div>';			
+			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-files-o"  fa-4x style="font-size:64px;color:blue;" aria-hidden="true"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-files-o" style="font-size:20px; color:blue;" aria-hidden="true"></i>&nbsp;&nbsp;'+files[i].fname+'</div></div></div>';			
 		div = div + div2;
 	}
 	div = div + '</div></div><div style="clear:both;"></div><br>';
@@ -127,27 +126,27 @@ function Media()
 			case 'png':
 			case 'jpeg':
 			case 'bmp':
-			case 'gif': 	images.push(files[i].fname); break;
+			case 'gif': 	images.push(files[i]); break;
 
 			case 'mp3':
 			case 'ogg':
-			case 'wav': 	audio.push(files[i].fname); break;
+			case 'wav': 	audio.push(files[i]); break;
 
 			case 'mp4':
 			case 'webm':
-			case 'mkv': 	video.push(files[i].fname); break;
+			case 'mkv': 	video.push(files[i]); break;
 
 			case 'pdf':
-			case 'odf': 	pdf.push(files[i].fname); break;
+			case 'odf': 	pdf.push(files[i]); break;
 
 			case 'doc':
 			case 'docx':
 			case 'rtf':
 			case 'txt':
 			case 'html':
-			case 'xml': 	docs.push(files[i].fname); break;
+			case 'xml': 	docs.push(files[i]); break;
 
-			default : others.push(files[i].fname); break;
+			default : others.push(files[i]); break;
 		}	
 	}
 	var len = pdf.length;
@@ -169,7 +168,7 @@ function guestOptions()
 		switch(guests[i])
 		{
 			case 'addFiles':  $('#btn-addFiles').show(); break;
-			case 'comments':  $('.comments').show(); break;
+			case 'comments':  $('.comments').show(); $('.dcomments').show(); break;
 			case 'downloads': $('.downloads').show(); break;
 			case 'share':     $('#btn-shareFiles').show(); break;
 			case 'delete':    
@@ -221,6 +220,7 @@ $(document).on("click", ".downloads", function(event) {
 
 
 $(document).on("click", ".fileBody", function() {
+	var comments = [], fname, id, type="files"; 
     if(this.id.search("Images")==0)
     {
     	$('.image').show();
@@ -229,7 +229,11 @@ $(document).on("click", ".fileBody", function() {
     	$('.pdf').hide();
     	$('.doc').hide();
     	$('.modal-content').css('width','500px');
-    	$('#imgsrc').attr('src','/uploads/'+dropName+'/'+images[(this.id).split('Images_')[1]]);
+    	fname = images[(this.id).split('Images_')[1]].fname;
+		comments = images[(this.id).split('Images_')[1]].comments;
+		id = images[(this.id).split('Images_')[1]]._id;
+		$('#imgsrc').attr('src','/uploads/'+dropName+'/'+fname);
+
     }
     else if(this.id.search("Video_")==0)
     {
@@ -239,7 +243,10 @@ $(document).on("click", ".fileBody", function() {
     	$('.pdf').hide();
     	$('.doc').hide();
     	$('.modal-content').css('width','800px');
-    	var src = '/uploads/'+dropName+'/'+video[((this.id).split('Video_'))[1]]
+    	fname = video[(this.id).split('Video_')[1]].fname;
+		comments = video[(this.id).split('Video_')[1]].comments;
+		id = video[(this.id).split('Video_')[1]]._id;
+		var src = '/uploads/'+dropName+'/'+fname;
     	var playme = document.getElementById('playvideo');
     	playme.src=src;
     	playme.load();
@@ -251,11 +258,15 @@ $(document).on("click", ".fileBody", function() {
     	$('.audio').show();
     	$('.pdf').hide();
     	$('.doc').hide();
-    	var src = '/uploads/'+dropName+'/'+audio[((this.id).split('Audio_'))[1]]
+    	fname = audio[(this.id).split('Audio_')[1]].fname;
+		comments =audio[(this.id).split('Audio_')[1]].comments;
+		id =audio[(this.id).split('Audio_')[1]]._id;
+		var src = '/uploads/'+dropName+'/'+fname;
     	var playme = document.getElementById('playaudio');
     	$('.modal-content').css('width','400px');
     	playme.src=src;
     	playme.load();
+
     }
     else if(this.id.search("pdf")==0)
     {
@@ -265,7 +276,10 @@ $(document).on("click", ".fileBody", function() {
     	$('.pdf').show();
     	$('.doc').hide();
     	var src = '/pdfjs/web/viewer.html?file=../../../uploads/';
-    	src = src + dropName+'/'+pdf[(this.id).split('pdf_')[1]];
+    	fname = pdf[(this.id).split('pdf_')[1]].fname;
+		comments = pdf[(this.id).split('pdf_')[1]].comments;
+		id = pdf[(this.id).split('pdf_')[1]]._id;
+    	src = src + dropName+'/'+fname;
     	$('#pdfsrc').attr('src',src);
     	$('.modal-content').css('width','840px');
     }
@@ -279,20 +293,53 @@ $(document).on("click", ".fileBody", function() {
     	$('.modal-content').css('width','600px');
     	var text;
 		if(this.id.search("Documents")==0)
-			text = "<h4>File Name : " + pdf[(this.id).split('Documents_')[1]]+'</h4><br>';
+		{
+			fname = pdf[(this.id).split('Documents_')[1]].fname;
+			comments = pdf[(this.id).split('Documents_')[1]].comments;
+			id = pdf[(this.id).split('Documents_')[1]]._id;
+			text = "<h4>File Name : " + fname+'</h4><br>';
+		}
 		else if(this.id.search("Others")==0)
-			text = "<h4>File Name : " + others[(this.id).split('Others_')[1]]+'</h4><br>';
+		{
+			fname = others[(this.id).split('Others_')[1]].fname;
+			comments = others[(this.id).split('Others_')[1]].comments;
+			id = others[(this.id).split('Others_')[1]]._id;
+			text = "<h4>File Name : " + fname+'</h4><br>';
+		}
 		else
 		{
 			var note = notes[(this.id).split('Notes_')[1]];
+			console.log(note.comments);
 			text = "Notes : <h5>"+note.title+'</h5>'+note.notes+'<br>';
+			comments = note.comments;
+			id 		 = note._id;
+			type = "notes";
 		}
 		$(".doc div").html(text);
-
-
     }
+   	
+
+	addcomments(comments, id, type);
 
 });
+
+function addcomments(comments, id, type)
+{
+	$(".dcomments").html('');
+	for(var i=0; i<comments.length; i++)
+	{
+		var timestamp = comments[i]._id.toString().substring(0,8);
+		var date = new Date( parseInt( timestamp, 16 ) * 1000 );
+		var time = moment(date).format('ddd DD-MM-YYYY hh:mm A');
+		console.log(comments[i].comment);
+		//comments[i].comment =  comments[i].comment.replace('\n','<br>');
+		var comm = '<hr><b>'+comments[i].name+'</b> : '+comments[i].comment+'<br><div class="Time">'+time+'</div>';
+		//$(comm).appendTo('.dcomments');
+		$( ".dcomments" ).append(comm);
+	}
+	var newcomm = '<hr><form method="GET" action="/comments/'+dropName+'/'+id+'"><textarea  class="form-control" name="name" rows="1" placeholder="Give your Name (Optional)"></textarea><br><textarea  class="commentInput form-control" name="comment" onkeyup="textAreaAdjust(this)" rows="1" placeholder="Add a new comment" required></textarea><br><input type="hidden" name="type" value="'+type+'"><input type="submit" value="Add Comment"></form>';
+	$( ".dcomments" ).append(newcomm);
+}	
 
 $('#fileviewModal').on('hide.bs.modal', function (e) {
     $("#playvideo").attr('src','');

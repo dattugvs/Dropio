@@ -55,6 +55,8 @@
         <div class="doc hidden">
             <div id="#docfileTitle"></div>
         </div>
+
+        <div class="dcomments hidden"></div>
     </div>
   </div>
 </div> 
@@ -115,10 +117,10 @@
                                 <div class="form-group">
                                     <h4>Add Notes:</h4>
                                     Notes Title:
-                                    <textarea  class="form-control" name="notesTitle" rows="1"></textarea>
+                                    <textarea  class="form-control" name="notesTitle" rows="1" autofocus></textarea>
                                     <br>
                                     Notes
-                                    <textarea class="notes form-control" name="notes" onkeyup="textAreaAdjust(this)" autofocus></textarea>
+                                    <textarea class="notes form-control" name="notes" onkeyup="textAreaAdjust(this)" ></textarea>
                                 </div>
                                 <button class="btn btn-success">Add Notes</button>
                             </form>

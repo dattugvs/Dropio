@@ -5,9 +5,9 @@ var dropSchema = mongoose.Schema({
 	password   : String,
 	expiry 	   : { type : Date, default: Date.now },
 	guests 	   : [String],
-	files 	   : [{fname:String, comments:[{name:String, content : String}]}],
-	notes	   : [{title: String, notes: String, comments : [{name:String, content : String}]}],
-	links	   : [{title: String, url : String, comments : [{name:String, content : String}]}],
+	files 	   : [{fname:String, comments:[{name:String, comment : String}]}],
+	notes	   : [{title: String, notes: String, comments : [{name:String, comment : String}]}],
+	links	   : [{title: String, url : String, comments : [{name:String, comment : String}]}],
 	adminPwd   : String
 });
 

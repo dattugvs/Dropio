@@ -126,7 +126,7 @@ progress::-webkit-progress-value {
 }
 .preview {
   margin-top: 85px;
-  width: 199px;
+  width: 198px;
   height: 40px;
   background-color: #C0C0C0;
   overflow: hidden;
@@ -196,4 +196,13 @@ progress::-webkit-progress-value {
 #imgsrc {
   width: 100%;
   height: 100%;
+}
+
+.commentInput {
+  max-height: 115px;
+  overflow-y:scroll;
+}
+.Time {
+  padding-left: 65%;
+  font-size: 12px;
 }

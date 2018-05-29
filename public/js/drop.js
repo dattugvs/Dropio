@@ -228,7 +228,7 @@ $(document).on("click", ".fileBody", function() {
     	$('.audio').hide();
     	$('.pdf').hide();
     	$('.doc').hide();
-    	$('.modal-content').css('width','500px');
+    	$('.modal-content').css('width','600px');
     	fname = images[(this.id).split('Images_')[1]].fname;
 		comments = images[(this.id).split('Images_')[1]].comments;
 		id = images[(this.id).split('Images_')[1]]._id;
@@ -263,7 +263,7 @@ $(document).on("click", ".fileBody", function() {
 		id =audio[(this.id).split('Audio_')[1]]._id;
 		var src = '/uploads/'+dropName+'/'+fname;
     	var playme = document.getElementById('playaudio');
-    	$('.modal-content').css('width','400px');
+    	$('.modal-content').css('width','600px');
     	playme.src=src;
     	playme.load();
 
@@ -326,20 +326,49 @@ $(document).on("click", ".fileBody", function() {
 function addcomments(comments, id, type)
 {
 	$(".dcomments").html('');
+	var div = '<div class="commentsList">';
 	for(var i=0; i<comments.length; i++)
 	{
 		var timestamp = comments[i]._id.toString().substring(0,8);
 		var date = new Date( parseInt( timestamp, 16 ) * 1000 );
 		var time = moment(date).format('ddd DD-MM-YYYY hh:mm A');
-		console.log(comments[i].comment);
-		//comments[i].comment =  comments[i].comment.replace('\n','<br>');
-		var comm = '<hr><b>'+comments[i].name+'</b> : '+comments[i].comment+'<br><div class="Time">'+time+'</div>';
-		//$(comm).appendTo('.dcomments');
-		$( ".dcomments" ).append(comm);
+		comments[i].comment =  comments[i].comment.replace(/\r?\n/g, "<br>");
+		var comm = '<div class="commentContent"><hr><b>'+comments[i].name+'</b> :<br>'+comments[i].comment+'<br><div class="Time">'+time+'</div></div>';
+		div = div + comm;
 	}
-	var newcomm = '<hr><form method="GET" action="/comments/'+dropName+'/'+id+'"><textarea  class="form-control" name="name" rows="1" placeholder="Give your Name (Optional)"></textarea><br><textarea  class="commentInput form-control" name="comment" onkeyup="textAreaAdjust(this)" rows="1" placeholder="Add a new comment" required></textarea><br><input type="hidden" name="type" value="'+type+'"><input type="submit" value="Add Comment"></form>';
+	div = div + "</div>"
+	$( ".dcomments" ).append(div);
+	var newcomm = '<div class="newComment"><hr><textarea  class="form-control" id="comment_name" rows="1" placeholder="Give your Name (Optional)"></textarea><br><textarea  class="commentInput form-control" id="comment" onkeyup="textAreaAdjust(this)" rows="1" placeholder="Add a new comment" required></textarea><br><input type="hidden" id="comment_type" value="'+type+'"><input type="hidden" id="comment_id" value="'+id+'"><button type="button" onclick="submitNewComment()" class="btn btn-default">Add this Comment</button></div>';
 	$( ".dcomments" ).append(newcomm);
-}	
+}
+
+function submitNewComment()
+{
+	var type = $("#comment_type").val();
+	var name = $("#comment_name").val();
+	var comment = $("#comment").val();
+	var id = $("#comment_id").val();
+	var url = '/comments/'+dropName+'/'+id;
+
+	$.ajax({
+    type: "POST",
+    url: '/comments/'+dropName+'/'+id,
+    data : {'name':name, 'type':type, 'comment':comment},
+    success: function(data, textStatus) {
+       if(data != "fail")
+       {
+       		var time = moment(new Date()).format('ddd DD-MM-YYYY hh:mm A');
+       		comment = comment.replace(/\r?\n/g, "<br />");
+       		var comm = '<div class="commentContent"><hr><b>'+name+'</b> : '+comment+'<br><div class="Time">'+time+'</div></div>';
+       		$(".commentsList").append(comm);
+       		$("#comment_name").val("");
+       		$("#comment").val("");
+       }
+       else
+       	alert("Curse Us!! Comment not added due to some internal problem");
+    }
+	});
+}
 
 $('#fileviewModal').on('hide.bs.modal', function (e) {
     $("#playvideo").attr('src','');

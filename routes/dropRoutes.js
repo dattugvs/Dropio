@@ -35,28 +35,24 @@ module.exports = function (app)
 			res.render('404',{'data':{'type':'file', 'status':'404', 'page_title':'Drop File Download'}});
 	});
 
-	app.get('/comments/:drop/:id', (req, res)=>{
-		var comment = { 'name':req.query.name, 'comment':req.query.comment};
-		var type_array_query = req.query.type+"._id";
-		var comment_array__query = req.query.type+'.$.comments';
+	app.post('/comments/:drop/:id', (req, res)=>{
+
+		var comment = { 'name':req.body.name, 'comment':req.body.comment};
+		var type_array_query = req.body.type+"._id";
+		var comment_array__query = req.body.type+'.$.comments';
 
 		var q1 = {}, q2 = {};
 		q1['drop'] = req.params.drop;
 		q1[type_array_query] = req.params.id;
 		q2[comment_array__query] = comment;
 
-		console.log(type_array_query+":"+q1[type_array_query]);
-		console.log(comment_array__query+":"+q2[comment_array__query]);
-
 		models.Drop.update(q1,{"$push":q2}, (err, updatedDrop)=>{
-				if(err)
-					res.send(JSON.stringify(err));
-				if(updatedDrop)
+				console.log(updatedDrop.nModified);
+				if(updatedDrop.nModified == "1")
 				{
-					console.log("Suckscess");
-					console.log(updatedDrop);
+					res.end("success");
 				}
+				res.end("fail");
 			});
-		//console.log(req.query.comment);
 	});
 }

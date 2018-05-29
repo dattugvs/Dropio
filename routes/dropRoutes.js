@@ -46,13 +46,61 @@ module.exports = function (app)
 		q1[type_array_query] = req.params.id;
 		q2[comment_array__query] = comment;
 
-		models.Drop.update(q1,{"$push":q2}, (err, updatedDrop)=>{
-				console.log(updatedDrop.nModified);
+		var elem_query = {};
+		elem_query = { '$elemMatch' : { 'comment' : req.body.comment}};
+
+		var comment_select = {};
+		comment_select[req.body.type+'.comments'] = elem_query;
+
+		console.log(comment_select);
+
+		models.Drop.update(q1,{"$push":q2}, {projection: comment_select}, (err, updatedDrop)=>{
+				console.log(updatedDrop);
+				console.log(objectToInsert._id);
 				if(updatedDrop.nModified == "1")
 				{
 					res.end("success");
 				}
-				res.end("fail");
+				//res.end("fail");
 			});
+	});
+
+	app.post('/delete/:drop', (req, res)=>{
+		if(req.body.type)
+		{
+			var searchbytype = req.body.type+"._id";
+			var query1 = {}, query2 = {};
+
+			query1['drop'] =  req.params.drop;
+			query1[searchbytype] =  req.body.typeId;
+
+			var commquery = req.body.type+".$.comments";
+			var temp = {'_id':req.body.commentId};
+			query2[commquery] = temp;
+		}
+		else if(req.body.fname)
+		{
+			var query1 = {'drop':req.params.drop};
+			var query2 = {'files':{'fname':req.body.fname}};
+		}
+		else
+		{
+			var query1 = {'drop':req.params.drop};
+			var query2 = {'notes':{'_id':req.body.id}};
+		}
+
+		console.log(query1);
+		console.log(query2);
+		models.Drop.update(query1, {$pull:query2}, (err, updatedDrop) => 
+		{
+			if (updatedDrop.nModified == "1")
+			{
+				if(req.body.type)
+					res.end("comments");
+				else
+					res.end("success");
+			}
+			res.end("fail");
+		});
 	});
 }

@@ -1,6 +1,6 @@
 var models = require('../models/schema');
 var fs = require('fs');
-
+var mongoose = require('mongoose');
 module.exports = function (app)
 {
 	app.get('/drop.io', (req, res)=> {
@@ -37,7 +37,8 @@ module.exports = function (app)
 
 	app.post('/comments/:drop/:id', (req, res)=>{
 
-		var comment = { 'name':req.body.name, 'comment':req.body.comment};
+		var id = mongoose.Types.ObjectId();
+		var comment = { 'name':req.body.name, 'comment':req.body.comment, '_id':id};
 		var type_array_query = req.body.type+"._id";
 		var comment_array__query = req.body.type+'.$.comments';
 
@@ -46,23 +47,16 @@ module.exports = function (app)
 		q1[type_array_query] = req.params.id;
 		q2[comment_array__query] = comment;
 
-		var elem_query = {};
-		elem_query = { '$elemMatch' : { 'comment' : req.body.comment}};
-
-		var comment_select = {};
-		comment_select[req.body.type+'.comments'] = elem_query;
-
-		console.log(comment_select);
-
-		models.Drop.update(q1,{"$push":q2}, {projection: comment_select}, (err, updatedDrop)=>{
-				console.log(updatedDrop);
-				console.log(objectToInsert._id);
-				if(updatedDrop.nModified == "1")
-				{
-					res.end("success");
-				}
-				//res.end("fail");
-			});
+		models.Drop.update(q1,{"$push":q2}, (err, updatedDrop)=>
+		{
+			console.log(updatedDrop);
+			if(updatedDrop.nModified == "1")
+			{
+				data = {'id':id};
+				res.end(id.toString());
+			}
+			res.end("fail");
+		});
 	});
 
 	app.post('/delete/:drop', (req, res)=>{
@@ -89,8 +83,6 @@ module.exports = function (app)
 			var query2 = {'notes':{'_id':req.body.id}};
 		}
 
-		console.log(query1);
-		console.log(query2);
 		models.Drop.update(query1, {$pull:query2}, (err, updatedDrop) => 
 		{
 			if (updatedDrop.nModified == "1")

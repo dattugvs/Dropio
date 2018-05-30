@@ -77,8 +77,11 @@ function showFiles(files, title)
 		var div2;
 		var arr = files[i].fname.split('.');
 		var ext = (arr[arr.length-1]).toLowerCase();
-		if(ext == 'jpg' || ext == '.png' || ext == 'jpeg' || ext == 'bmp' || ext == 'gif')
+
+		if(ext == 'jpg' || ext == 'png' || ext == 'jpeg' || ext == 'bmp' || ext == 'gif')
+		{
 			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete hidden" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview"><img src="/uploads/'+dropName+'/'+files[i].fname+'" width="200px" height="150px"></div></div>';
+		}
 		
 		else if(ext == 'mp3' || ext=="ogg" || ext=="wav")
 			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete hidden" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-volume-up fa-4x" aria-hidden="true"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-volume-up" style="font-size:20px;"aria-hidden="true"></i>&nbsp;&nbsp;'+files[i].fname+'</div></div></div>';
@@ -222,22 +225,21 @@ $(document).on("click", ".delete", function(event) {
 	event.stopPropagation();
 	var fname, data={};
 	var id = this.id;
+	var arr = [];
 	if(this.id)
 	{
-		var id;
-		if(this.id.search('notes') == 0)
+		arr = (this.id).split('_');
+		if(arr.length == 4)
 		{
-			id = notes[(this.id).split('notes_')[1]]._id;
-			data = {'id':id};
-		}
-		else
-		{
-			arr = (this.id).split('_');
-			alert(arr);
 			type = arr[0];
 			typeId = arr[1];
 			commid = comments[arr[3]]._id;
 			data = {'type': type, 'typeId':typeId, 'commentId':commid};
+		}
+		else
+		{
+			id = notes[(this.id).split('notes_')[1]]._id;
+			data = {'id':id};
 		}
 	}
 	else
@@ -257,8 +259,7 @@ $(document).on("click", ".delete", function(event) {
        }
        else if(data == "comments")
        {
-       		alert(id);
-       		$('#'+id).remove();
+       		$('#commentContent_'+arr[1]).remove();
        }
        else
        	alert("Curse Us!! not deleted due to some internal problem");
@@ -356,7 +357,6 @@ $(document).on("click", ".fileBody", function() {
 		else
 		{
 			var note = notes[(this.id).split('Notes_')[1]];
-			console.log(note.comments);
 			text = "Notes : <h5>"+note.title+'</h5>'+note.notes+'<br>';
 			comments = note.comments;
 			id 		 = note._id;
@@ -380,7 +380,7 @@ function addcomments(comments, id, type)
 		var date = new Date( parseInt( timestamp, 16 ) * 1000 );
 		var time = moment(date).format('ddd DD-MM-YYYY hh:mm A');
 		comments[i].comment =  comments[i].comment.replace(/\r?\n/g, "<br>");
-		var comm = '<div class="commentContent"><hr><b>'+comments[i].name+'</b> :<br>'+comments[i].comment+'<br><div class="Time">'+time+'&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete" id="'+type+'_'+id+'_comment_'+i+'" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></span></div></div>';
+		var comm = '<div id="commentContent_'+id+'" class="commentContent"><hr><b>'+comments[i].name+'</b> :<br>'+comments[i].comment+'<br><div class="Time">'+time+'&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete" id="'+type+'_'+id+'_comment_'+i+'" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></span></div></div>';
 		div = div + comm;
 	}
 	div = div + "</div>"
@@ -404,11 +404,16 @@ function submitNewComment()
     success: function(data, textStatus) {
        if(data != "fail")
        {
-       		var time = moment(new Date()).format('ddd DD-MM-YYYY hh:mm A');
-       		comment = comment.replace(/\r?\n/g, "<br />");
+       		var newComment =  {'_id':data, 'name':name, 'comment':comment};
+       		comments.push(newComment);
 
-       		comments.push()
-       		var comm = '<div class="commentContent"><hr><b>'+name+'</b> : <br>'+comment+'<br><div class="Time">'+time+'&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete" id="'+type+'_'+id+'_comment_'+comments.length+'" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></span></div></div>';
+       		var timestamp = newComment._id.toString().substring(0,8);
+			var date = new Date( parseInt( timestamp, 16 ) * 1000 );
+			var time = moment(date).format('ddd DD-MM-YYYY hh:mm A');
+			
+			var i = comments.length-1;
+			var comm = '<div id="commentContent_'+id+'" class="commentContent"><hr><b>'+comments[i].name+'</b> :<br>'+comments[i].comment+'<br><div class="Time">'+time+'&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete" id="'+type+'_'+id+'_comment_'+i+'" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></span></div></div>';
+       		
        		$(".commentsList").append(comm);
        		$("#comment_name").val("");
        		$("#comment").val("");

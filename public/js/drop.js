@@ -75,6 +75,7 @@ function showFiles(files, title)
 	for(var i=0; i<files.length; i++)
 	{
 		var div2;
+		var sharebox = '<br><div class="shareBox hidden" id="box_'+i+'"><center><input type="checkbox" name="fileSelect" value = "'+files[i].fname+'"><center></div>'; 
 		var arr = files[i].fname.split('.');
 		var ext = (arr[arr.length-1]).toLowerCase();
 
@@ -97,7 +98,8 @@ function showFiles(files, title)
 		
 		else
 			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete hidden" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-files-o"  fa-4x style="font-size:64px;color:blue;" aria-hidden="true"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-files-o" style="font-size:20px; color:blue;" aria-hidden="true"></i>&nbsp;&nbsp;'+files[i].fname+'</div></div></div>';			
-		div = div + div2;
+		
+		div = div +'<div class="file">'+sharebox+div2+'</div>';
 	}
 	div = div + '</div></div><div style="clear:both;"></div><br>';
 	$('.dfiles').append(div);
@@ -428,6 +430,33 @@ $('#fileviewModal').on('hide.bs.modal', function (e) {
     $("#playvideo").attr('src','');
     $("#playaudio").attr('src','');
 });
+
+$(document).on('click', '#selectFiles', function(event){ event.stopPropagation(); $('.file .shareBox').show()});
+
+$(document).on('click', '#emailFiles', function(event){
+	event.stopPropagation();
+	var files = [];
+	var data = {};
+	var to = $("input[name='email']").val();
+	data['to'] = to;
+	$("input[name='fileSelect']:checked").each( function () {
+		files.push($(this).val());
+	});
+
+	files = JSON.stringify(files);
+	data['files']=files;
+	console.log(data);
+	url = '/sendFiles/'+dropName;
+	$.ajax({
+    type: "POST",
+    url: url,
+    data : data,
+    success: function(data, textStatus) {
+    	alert(data);
+    }
+	});
+});
+
 
 // $(document).bind("contextmenu",function(e) { 
 // 	e.preventDefault();

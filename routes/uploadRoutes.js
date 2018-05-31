@@ -3,6 +3,7 @@ var multer  = require('multer');
 var fs = require('fs');
 var mkdirp = require('mkdirp');
 var dir = '';
+
 var storage = multer.diskStorage({
 	destination : (req, file, cb) => {
 		var dir = './public/uploads/'+req.params.dropName;
@@ -50,7 +51,11 @@ module.exports = function(app) {
 			else
 			{
 				var newUpload = models.Drop(req.body);
+				newUpload.guestsPwd = newUpload.generateHash(req.body.guestsPwd);
 				newUpload['files'] = files;
+				newUpload.email = 'dattugvs@gmail.com';
+				//newUpload.emailPwd = newUpload.generateHash('dattu123');
+				newUpload.emailPwd = "dattu123";
 				newUpload.save((err, uploadedData) => {
 					res.redirect('/drop.io/'+req.params.dropName);
 				});

@@ -93,8 +93,6 @@
                     <ul class="tabs vertical" data-tab="">
                         <li class="tab-title active"><a href="#add_files" aria-selected="true" tabindex="0">Files</a></li>
                         <li class="tab-title"><a href="#add_notes" aria-selected="false" tabindex="-1">Notes</a></li>
-                        <li class="tab-title"><a href="#add_links" aria-selected="false" tabindex="-1">Links</a></li>
-                        <li class="tab-title"><a href="#add_emails" aria-selected="false" tabindex="-1">Emails</a></li>
                     </ul>
                     <div class="tabs-content">
                         <div class="content active" id="add_files" aria-hidden="false">
@@ -125,37 +123,6 @@
                                 <button class="btn btn-success">Add Notes</button>
                             </form>
                         </div>
-                        <div class="content" id="add_links" aria-hidden="true" tabindex="-1">
-                            <div class="container">
-                                <ul class="nav nav-tabs">
-                                    <li class="active"><a data-toggle="tab" href="#content1" class="nav-link">Link - 1</a></li>
-                                    &nbsp;
-                                    <button type="button" class="btn btn-primary" onclick="addNewTab()">Add new Tab</button>
-                                </ul>
-                                <div class="tab-content">
-                                    <div id="content1" class="tab-pane fade in active">
-                                        Link Title :
-                                        <textarea class="form-control" rows="1" id="link1" autofocus></textarea>
-                                        URL :
-                                        <textarea class="form-control" rows="1" id="txt-link1"></textarea>
-                                        Comments :
-                                        <textarea class="form-control" rows="2" id="txt-comment1"></textarea>
-                                    </div>
-                                </div>
-                                <br>
-                                <!-- <button class="btn btn-success">Add Links</button> -->
-                            </div>
-                        </div>
-                        <div class="content" id="add_emails" aria-hidden="true" tabindex="-1">
-                            Email :
-                            <input type="email" name="email" autofocus>
-                            <br>
-                            <br>
-                            <p><b>&rArr; </b>Email will be verified</p>
-                            <p><b>&rArr; </b>Notifications on drop updates will be sent to this email.</p>
-                            <p><b>&rArr; </b>This email can be removed by the drop 'admin' with/without notifying you.</p>
-                            <button class="btn btn-success">Add Email</button>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -174,14 +141,15 @@
                                     <input type="email" name="email" autofocus>
                                     <br>
                                     <br>
-                                    <button class="btn btn-success">Share Files</button>
+                                    <button id="emailFiles" class="btn btn-success">Share Files</button>
                                 </center>
                             </div>
                             <div class="float col-md-4 shareEmail">
                                 <br>
-                                <p><b>&rArr; </b>Email will be verified</p>
-                                <p><b>&rArr; </b>Notifications on drop updates will be sent to this email.</p>
-                                <p><b>&rArr; </b>This email can be removed by the drop 'admin' with/without notifying you.</p>
+                                <p><b>&rArr; </b>Click this button&nbsp;
+                                <button type="button" id="selectFiles" class="btn btn-primary">Select Files</button></p>
+                                <p><b>&rArr; </b>Select all files to be shared by clicking on the checkbox on top of the file.</p>
+                                <p><b>&rArr; </b>Provide 'valid' email address and share the drop files.</p>
                             </div>
                         </div>
                         <div class="content shareContent" id="emailAlerts" aria-hidden="true" tabindex="-1">

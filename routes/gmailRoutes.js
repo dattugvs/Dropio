@@ -1,67 +1,60 @@
-var nodemailer = require('nodemailer');
+var models = require('../models/schema');
 var fs = require('fs');
-var transporter;
-
+var mongoose = require('mongoose');
+var nodemailer = require('nodemailer');
 module.exports = function (app)
 {
-	app.post('/sendFiles/:drop', (req,res) => {
+	app.post('/shareFiles/:drop', (req,res) => {
 
 		var attachments = [];
 		var filenotfound = [];
 		console.log(req.body);
-		var files = JSON.parse(req.body.files);
-		for(var i=0; i<files.length; i++)
+		req.body.files = JSON.parse(req.body.files);
+		req.body.guests = JSON.parse(req.body.guests);
+		console.log(req.body);
+		var id = mongoose.Types.ObjectId();
+		req.body['drop'] = id.toString();
+		req.body['folderName'] = req.params.drop;
+		var url = 'http://localhost:4000/drop.io/'+id.toString();
+		
+		var text = 'This sharable link redirects to shared files from the drop named '+req.params.drop+':\n\n'+url
+		var mailOptions = {
+			from: 'dattugvs@gmail.com',
+			to: req.body.to,
+			subject: 'Drop files shared',
+			text: text
+		};
+
+	  	var transporter = nodemailer.createTransport({
+		  service: 'gmail',
+		  auth: {
+		    user: 'dattugvs@gmail.com',
+		    pass: 'dattu123'
+		  }
+		});
+
+		var newUpload = models.Drop(req.body);
+		newUpload.save((err, uploadedData) => 
 		{
-			var fname = files[i];
-			var path = './public/uploads/'+req.params.drop+'/'+fname;
-			if (fs.existsSync(path))
-			{
-				attachments.push({'filename':fname, 'path':path});
-			}
-			else
-			{
-				filenotfound.push(fname);
-				console.log(fname+": not filenotfound");
-			}
-		}
-		if(attachments.length)
-		{
-			var mailOptions = {
-			  from: 'dattugvs@gmail.com',
-			  to: req.body.to,
-			  subject: 'Drop '+req.params.drop+' files',
-			  text : 'Drop Files Shared to email. Ignore this email if this doesn\'t belong to you',
-			  attachments : attachments
-			};
-			resp = sendMail(mailOptions);
-			if(resp == "error")
+			if(err)
 				res.end("error");
 			else
-				res.end(resp);
-
-		}		
-	});
-}
-
-function sendMail(mailOptions)
-{
-	var transporter = nodemailer.createTransport({
-	  service: 'gmail',
-	  auth: {
-	    user: 'dattugvs@gmail.com',
-	    pass: 'dattu123'
-	  }
-	});
-	transporter.sendMail(mailOptions, function(error, info){
-	  	if (error)
-	  	{
-	    	console.log(error);
-	    	return "error";
-	  	}
-	  	else
-	  	{
-	    	console.log('Email sent: ' + info.response);
-	    	return info.response;
-	  	}
+				{
+					console.log(url);
+					transporter.sendMail(mailOptions, function(error, info)
+					{
+		  				if(error)
+		  				{
+		    				console.log(error);
+		    				res.end("error");
+		  				}
+		  				if(info)
+		  				{
+		    				console.log('Email sent: ' + info.response);
+		    				res.end(url);
+		  				}
+					});				
+				}
+		});
 	});
 }

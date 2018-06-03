@@ -57,6 +57,8 @@ module.exports = function(app) {
 				//newUpload.emailPwd = newUpload.generateHash('dattu123');
 				newUpload.emailPwd = "dattu123";
 				newUpload.save((err, uploadedData) => {
+					if(err)
+						res.redirect('/drop.io');
 					res.redirect('/drop.io/'+req.params.dropName);
 				});
 			}

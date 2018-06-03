@@ -11,7 +11,8 @@ var dropSchema = mongoose.Schema({
  	files 	   : [{fname:String, comments:[{name:String, comment : String}]}],
 	notes	   : [{title: String, notes: String, comments : [{name:String, comment : String}]}],
 	adminEmail : String,
-	adminPwd   : String
+	adminPwd   : String,
+	folderName : String
 });
 
 // hash the password

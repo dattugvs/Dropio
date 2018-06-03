@@ -29,6 +29,7 @@ var drop,dropName;
 var files, view;
 var notes, links;
 var guests = [];
+var folderName;
 
 function getFiles()
 {
@@ -39,6 +40,9 @@ function getFiles()
 		notes = drop.notes;
 		links = drop.links;
 		guests = drop.guests;
+		folderName = drop['folderName'];
+		if(!folderName)
+			folderName = drop.drop;
 		setViews();
 	});
 }
@@ -52,7 +56,6 @@ function setViews()
 function showNotes(notes, title)
 {
 	if(!notes.length) return;
-
 	var div = '<div class="fileList col-md-12"><div class="filesType col-md-12"><i class="fa fa-picture-o fa-2x" aria-hidden="true"></i>&nbsp;<span><b>'+title+'</b></span></div><div class="col rfiles col-md-12">';
 	for(var i=0; i<notes.length; i++)
 	{
@@ -75,13 +78,14 @@ function showFiles(files, title)
 	for(var i=0; i<files.length; i++)
 	{
 		var div2;
-		var sharebox = '<br><div class="shareBox hidden" id="box_'+i+'"><center><input type="checkbox" name="fileSelect" value = "'+files[i].fname+'"><center></div>'; 
+		var checkbox = '<center><label class="checkbox"><input type="checkbox" name="fileSelect" value = "'+files[i].fname+'"><span class="checkmark"></span></label></center>';
+		var sharebox = '<br><div class="shareBox hidden" id="box_'+i+'">'+checkbox+'</div><br>'; 
 		var arr = files[i].fname.split('.');
 		var ext = (arr[arr.length-1]).toLowerCase();
 
 		if(ext == 'jpg' || ext == 'png' || ext == 'jpeg' || ext == 'bmp' || ext == 'gif')
 		{
-			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete hidden" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview"><img src="/uploads/'+dropName+'/'+files[i].fname+'" width="200px" height="150px"></div></div>';
+			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete hidden" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview"><img src="/uploads/'+folderName+'/'+files[i].fname+'" width="200px" height="150px"></div></div>';
 		}
 		
 		else if(ext == 'mp3' || ext=="ogg" || ext=="wav")
@@ -172,11 +176,11 @@ function guestOptions()
 	{
 		switch(guests[i])
 		{
-			case 'addFiles':  $('#btn-addFiles').show(); break;
-			case 'comments':  $('.comments').show(); $('.dcomments').show(); break;
-			case 'downloads': $('.downloads').show(); break;
-			case 'share':     $('#btn-shareFiles').show(); break;
-			case 'delete': 	  $('.delete').show();   
+			case 'addFiles':  $('#btn-addFiles').show(); $('.addFilesbox').show();  break;
+			case 'comments':  $('.comments').show(); $('.commentsbox').show(); $('.dcomments').show(); break;
+			case 'downloads': $('.downloads').show(); $('.downloadsbox').show();  break;
+			case 'share':     $('#btn-shareFiles').show();  break;
+			case 'delete': 	  $('.delete').show(); $('.deletebox').show();   
 		}
 	}
 }
@@ -237,6 +241,7 @@ $(document).on("click", ".delete", function(event) {
 			typeId = arr[1];
 			commid = comments[arr[3]]._id;
 			data = {'type': type, 'typeId':typeId, 'commentId':commid};
+			alert(arr);
 		}
 		else
 		{
@@ -255,6 +260,7 @@ $(document).on("click", ".delete", function(event) {
     url: url,
     data : data,
     success: function(data, textStatus) {
+    	alert(data);
        if(data == "success")
        {
        		location.reload();
@@ -283,7 +289,7 @@ $(document).on("click", ".fileBody", function() {
     	fname = images[(this.id).split('Images_')[1]].fname;
 		comments = images[(this.id).split('Images_')[1]].comments;
 		id = images[(this.id).split('Images_')[1]]._id;
-		$('#imgsrc').attr('src','/uploads/'+dropName+'/'+fname);
+		$('#imgsrc').attr('src','/uploads/'+folderName+'/'+fname);
     }
     else if(this.id.search("Video_")==0)
     {
@@ -296,7 +302,7 @@ $(document).on("click", ".fileBody", function() {
     	fname = video[(this.id).split('Video_')[1]].fname;
 		comments = video[(this.id).split('Video_')[1]].comments;
 		id = video[(this.id).split('Video_')[1]]._id;
-		var src = '/uploads/'+dropName+'/'+fname;
+		var src = '/uploads/'+folderName+'/'+fname;
     	var playme = document.getElementById('playvideo');
     	playme.src=src;
     	playme.load();
@@ -311,7 +317,7 @@ $(document).on("click", ".fileBody", function() {
     	fname = audio[(this.id).split('Audio_')[1]].fname;
 		comments =audio[(this.id).split('Audio_')[1]].comments;
 		id =audio[(this.id).split('Audio_')[1]]._id;
-		var src = '/uploads/'+dropName+'/'+fname;
+		var src = '/uploads/'+folderName+'/'+fname;
     	var playme = document.getElementById('playaudio');
     	$('.modal-content').css('width','600px');
     	playme.src=src;
@@ -397,11 +403,12 @@ function submitNewComment()
 	var name = $("#comment_name").val();
 	var comment = $("#comment").val();
 	var id = $("#comment_id").val();
+	alert(id);
 	var url = '/comments/'+dropName+'/'+id;
 
 	$.ajax({
     type: "POST",
-    url: '/comments/'+dropName+'/'+id,
+    url: url,
     data : {'name':name, 'type':type, 'comment':comment},
     success: function(data, textStatus) {
        if(data != "fail")
@@ -424,6 +431,7 @@ function submitNewComment()
        	alert("Curse Us!! Comment not added due to some internal problem");
     }
 	});
+
 }
 
 $('#fileviewModal').on('hide.bs.modal', function (e) {
@@ -436,25 +444,44 @@ $(document).on('click', '#selectFiles', function(event){ event.stopPropagation()
 $(document).on('click', '#emailFiles', function(event){
 	event.stopPropagation();
 	var files = [];
+	var guests = [];
 	var data = {};
 	var to = $("input[name='email']").val();
 	data['to'] = to;
+	$("#sharableLink").html('');
 	$("input[name='fileSelect']:checked").each( function () {
-		files.push($(this).val());
+		var temp = {};
+		temp['fname'] = $(this).val();
+		files.push(temp);
+	});
+
+	$("input[name='guests']:checked").each( function () {
+		
+		guests.push($(this).val());
 	});
 
 	files = JSON.stringify(files);
+	guests = JSON.stringify(guests);
 	data['files']=files;
+	data['guests'] = guests;
 	console.log(data);
-	url = '/sendFiles/'+dropName;
+	url = '/shareFiles/'+dropName;
 	$.ajax({
     type: "POST",
     url: url,
     data : data,
     success: function(data, textStatus) {
-    	alert(data);
+    	$('.file .shareBox').hide();
+    	$('.sharableLink').show();
+    	$("#sharableLink").html(data);
     }
 	});
+});
+
+$(document).on('click','#sharableLink', function() {
+	  $(this).select();
+	  document.execCommand("copy");
+	  alert("Copied to the clipboard : " + $(this).html());
 });
 
 

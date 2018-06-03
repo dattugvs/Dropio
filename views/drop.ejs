@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/css/drop.css">
     <link rel="stylesheet" type="text/css" href="/css/tabs.css">
+    <link rel="stylesheet" type="text/css" href="/css/checkbox.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
@@ -135,21 +136,45 @@
                     <div class="tabs-content">
                         <div class="content shareContent active" id="emailShare" aria-hidden="true" tabindex="-1">
                             <div class="float col-md-4">
-                                <br>
-                                <br>
-                                <center>Email :
-                                    <input type="email" name="email" autofocus>
-                                    <br>
-                                    <br>
-                                    <button id="emailFiles" class="btn btn-success">Share Files</button>
-                                </center>
-                            </div>
+                    <b>Guest Permissions : </b>
+                    <label style="display: none;" class="checkbox addFilesbox">
+                        <input type="checkbox" name="guests"  value="addFiles">
+                        <span class="checkmark"></span> 
+                        <span style="display:inline-block; width: 30px;"></span>
+                        Add files
+                    </label>
+                    <label style="display: none;" class="checkbox commentsbox">
+                        <input type="checkbox" name="guests"  value="comments">
+                        <span class="checkmark"></span>
+                        <span style="display:inline-block; width: 30px;"></span>
+                        Add Comments
+                    </label>
+                    <label style="display: none;" class="checkbox downloadsbox">
+                        <input type="checkbox" name="guests"  value="downloads">
+                        <span class="checkmark"></span>
+                        <span style="display:inline-block; width: 30px;"></span>
+                        Download Files
+                    </label>
+                    <label style="display: none;" class="checkbox deletebox">
+                        <input type="checkbox" name="guests"  value="delete">
+                        <span class="checkmark"></span>
+                        <span style="display:inline-block; width: 30px;"></span>
+                        Delete Files
+                    </label>
+                    <br>
+                    Email to share : <span style="display:inline-block; width: 35px;"></span><input type="email" name="email" autofocus><br><br>
+                    Password :<span style="display:inline-block; width: 75px;"></span><input type="password" name="guestsPwd">&nbsp;(optional)<br><br>
+                    <button id="emailFiles" class="btn btn-success">Share Files</button>            
+                </div>
                             <div class="float col-md-4 shareEmail">
                                 <br>
                                 <p><b>&rArr; </b>Click this button&nbsp;
                                 <button type="button" id="selectFiles" class="btn btn-primary">Select Files</button></p>
                                 <p><b>&rArr; </b>Select all files to be shared by clicking on the checkbox on top of the file.</p>
-                                <p><b>&rArr; </b>Provide 'valid' email address and share the drop files.</p>
+                                <p><b>&rArr; </b>Provide 'valid' email address and other details to share the drop files.</p>
+
+                                <p class="sharableLink"><b>&rArr; </b>Your sharable drop link:</p>
+                                <textarea class="form-control" id="sharableLink" rows="2"></textarea>
                             </div>
                         </div>
                         <div class="content shareContent" id="emailAlerts" aria-hidden="true" tabindex="-1">

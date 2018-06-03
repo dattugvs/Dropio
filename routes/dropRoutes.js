@@ -76,6 +76,12 @@ module.exports = function (app)
 		{
 			var query1 = {'drop':req.params.drop};
 			var query2 = {'files':{'fname':req.body.fname}};
+			fs.unlink('./uploads/'+req.params.drop+'/'+req.body.fname, (err) => {
+			  if (err)
+			  	res.end("fail");
+			  else
+			  	console.log('successfully deleted'+req.params.drop+'/'+req.body.fname);
+			});
 		}
 		else
 		{
@@ -85,6 +91,7 @@ module.exports = function (app)
 
 		models.Drop.update(query1, {$pull:query2}, (err, updatedDrop) => 
 		{
+			console.log(updatedDrop);
 			if (updatedDrop.nModified == "1")
 			{
 				if(req.body.type)

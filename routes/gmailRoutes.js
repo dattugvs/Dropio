@@ -34,27 +34,37 @@ module.exports = function (app)
 		});
 
 		var newUpload = models.Drop(req.body);
-		newUpload.save((err, uploadedData) => 
+		var newLogin  = models.Login(req.body);
+		console.log("email:")
+		console.log(req.body);
+		console.log(newLogin);
+		newUpload.save((err, newDrop) => 
 		{
 			if(err)
 				res.end("error");
-			else
+			newLogin.save((err, newLogin) =>
+			{
+				if(err)
+					res.end("error");
+				transporter.sendMail(mailOptions, function(error, info)
 				{
-					console.log(url);
-					transporter.sendMail(mailOptions, function(error, info)
-					{
-		  				if(error)
-		  				{
-		    				console.log(error);
+		  			if(error)
+		  			{
+		    			console.log(error);
+		    			res.end("error");
+		  			}
+		  			if(info)
+		  			{
+		    			console.log('Email sent: ' + info.response);
+		    			models.Drop.update({'drop':req.params.drop},{'$push':{'shared':url}}, (err, updatedDrop) => 
+		    			{
+		    				if(updatedDrop)
+		    					res.end(url);
 		    				res.end("error");
-		  				}
-		  				if(info)
-		  				{
-		    				console.log('Email sent: ' + info.response);
-		    				res.end(url);
-		  				}
-					});				
-				}
+		    			});
+		  			}
+				});				
+			});
 		});
 	});
 }

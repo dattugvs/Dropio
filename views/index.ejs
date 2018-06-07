@@ -32,37 +32,35 @@
 		</div>
 		<div class="col-md-6 newDrop">
 			<h2>Create a new drop:</h2>
-			<form id="myForm" method="post" action="/" 
-			  enctype="multipart/form-data">
-				<div class="files">
-					<div class="file-drop-area">
-		          <i class="fa fa-files-o fa-2x"></i>
-		          <span class="file-msg js-set-number">&nbsp;Add Files (Select, Drag & Drop)</span>
-		          <input class="file-input" type="file" multiple name="files"   multiple="true" required>
-	        	</div>
-				<br>
-				<progress class="progress" max="100" value="0"></progress>
-				<br>
-				</div>
+			<hr>
+			<br>
+			<% if(message.length > 0) { %>
+            <div class="alert alert-danger" role="alert" id="status"><%= message %></div>
+            <% } %>
+			<form id="myForm" method="post" action="/signup">
 				<div>
 					<b>Name of the Drop:</b>
 					<span style="display:inline-block; width: 42px;"></span>
 					drop.io/&nbsp;
-					<input type="text" id="drop" name="drop" onblur="DropName()">
+					<input type="text" pattern=".{2,}"  name="drop" required title="6 characters minimum" autofocus>
 					<div id="min">
-						<ul><li>Drop name must be a minimum of 5 characters</li></ul>
+						<ul><li>Drop name must be a minimum of 6 characters</li></ul>
 					</div>
 				</div>
 				<div>
 					<b>Add a Password:</b>
+					<input type="hidden" name="password" value="password">
 					<span style="display:inline-block; width: 125px;"></span>
-					<input type="password" id="password" name="guestsPwd"> (optional)
+					<input type="password" pattern=".{6,}"  name="guestsPwd"  title="6 characters minimum">
+					<div id="min">
+						<ul><li>Guest password must be a minimum of 6 characters</li></ul>
+					</div>
 				</div>
 				<div>
 					<br>
 					<b>Expire drop after:</b>
 					<span style="display:inline-block; width: 120px;"></span>
-					<select name="expire" id="expire">
+					<select name="expire" id="expire" required>
 						<option value="0" disabled="true" selected>Select</option>
 						<option value="1d">1 day</option>
 						<option value="1w">1 week</option>
@@ -82,9 +80,6 @@
 					<br>
 					<span style="display:inline-block; width: 260px;"></span>
 					<input type="checkbox" name="guests"  value="downloads">Download Files
-					<br>
-					<span style="display:inline-block; width: 260px;"></span>
-					<input type="checkbox" name="guests"  value="share">Share Files
 					<br>
 					<span style="display:inline-block; width: 260px;"></span>
 					<input type="checkbox" name="guests"  value="delete">Delete Files

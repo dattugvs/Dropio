@@ -17,7 +17,8 @@ var storage = multer.diskStorage({
 var upload 	= multer({storage : storage});
 
 module.exports = function(app) {
-	app.post('/:dropName', upload.any(), (req, res)=> {
+	app.post('/addfiles/:drop', upload.any(), (req, res)=>
+	{
 		var files = [];
 		for(var i=0; i<req.files.length; i++)
 		{
@@ -25,43 +26,20 @@ module.exports = function(app) {
 			temp['fname'] = req.files[i].originalname;
 			files.push(temp);
 		}
-
-		models.Drop.findOne({'drop':req.params.dropName}, (err, drop) => {
-			if(drop)
-			{
-				console.log(req.body);
-				var json = {};
-				if(files.length)
-				{
-					//files = tfiles;
-					json  = {'files':files}
-				}
-				else if(req.body.notes)
-				{
-					var title = req.body.notesTitle;
-					var notes = req.body.notes;
-					var note = {title:title, notes: notes}
-					json = {notes : note}
-				}
-				models.Drop.update({'drop':drop.drop},{$push:json},
-					(err, updatedDrop)=>{
-						res.redirect('/drop.io/'+req.params.dropName);
-					});					
-			}
-			else
-			{
-				var newUpload = models.Drop(req.body);
-				newUpload.guestsPwd = newUpload.generateHash(req.body.guestsPwd);
-				newUpload['files'] = files;
-				newUpload.email = 'dattugvs@gmail.com';
-				//newUpload.emailPwd = newUpload.generateHash('dattu123');
-				newUpload.emailPwd = "dattu123";
-				newUpload.save((err, uploadedData) => {
-					if(err)
-						res.redirect('/drop.io');
-					res.redirect('/drop.io/'+req.params.dropName);
-				});
-			}
-		});
+		var json = {};
+		if(files.length)
+			json  = {'files':files}
+		else if(req.body.notes)
+		{
+			var title = req.body.notesTitle;
+			var notes = req.body.notes;
+			var note = {title:title, notes: notes}
+			json = {notes : note}
+		}
+		models.Drop.update({'drop':req.params.drop},{$push:json}, (err, updatedDrop)=>
+		{
+			console.log(updatedDrop);
+				res.redirect('/drop.io/'+req.params.drop);
+		});					
 	});
 }

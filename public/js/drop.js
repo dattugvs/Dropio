@@ -9,15 +9,16 @@ $('#btn-shareFiles').click(()=>{
 });
 
 $().ready(function(){
-  $('.tab-title>a').click(function(e){
-    e.preventDefault();
-    var index = $(this).parent().index();
-    $(this).parent().addClass('active')
-         .siblings().removeClass('active')
-         .parent('ul.tabs').siblings('.tabs-content').children('.content').removeClass('active')
-         .eq(index).addClass('active');
-  });
-  getFiles();
+	$('.tab-title>a').click(function(e){
+	    e.preventDefault();
+	    var index = $(this).parent().index();
+	    $(this).parent().addClass('active')
+	         .siblings().removeClass('active')
+	         .parent('ul.tabs').siblings('.tabs-content').children('.content').removeClass('active')
+	         .eq(index).addClass('active');
+	  });
+	getFiles();
+  
 });
 
 function textAreaAdjust(o) {
@@ -30,26 +31,19 @@ var files, view;
 var notes, links;
 var guests = [];
 var folderName;
-
+var role;
 function getFiles()
 {
 	dropName = (window.location.pathname).split('/')[2];
-	$.getJSON('/getFiles/'+dropName, function(result){
-		drop = result;
-		files = drop.files;
-		notes = drop.notes;
-		links = drop.links;
-		guests = drop.guests;
-		folderName = drop['folderName'];
-		if(!folderName)
-			folderName = drop.drop;
-		setViews();
-	});
-}
-
-function setViews()
-{
-	$('.dfiles').html('');
+	drop = JSON.parse($('.dropcontentList').html());
+	files = drop.files;
+	notes = drop.notes;
+	links = drop.links;
+	guests = drop.guests;
+	role   = $('.userRole').html();
+	folderName = drop['folderName'];
+	if(!folderName)
+		folderName = drop.drop;
 	Media();
 }
 
@@ -124,7 +118,7 @@ function Media()
 	video  = [];
 	others = [];
 	asort('fname');
-	
+	$('.dfiles').html('');
 	for(var i=0; i<files.length; i++)
 	{
 		arr = files[i].fname.split('.');
@@ -167,14 +161,18 @@ function Media()
 	showFiles(video, 'Video');
 	showFiles(pdf, 'Documents');
 	showFiles(others, 'Others');
-	guestOptions();
+	alert(role);
+	if(role == "guest")
+		guestOptions(guests);
+	else
+		guestOptions(['addFiles', 'comments', 'downloads', 'share', 'delete']);
 }
 
-function guestOptions()
+function guestOptions(permissions)
 {
-	for(var i=0; i<guests.length; i++)
+	for(var i=0; i<permissions.length; i++)
 	{
-		switch(guests[i])
+		switch(permissions[i])
 		{
 			case 'addFiles':  $('#btn-addFiles').show(); $('.addFilesbox').show();  break;
 			case 'comments':  $('.comments').show(); $('.commentsbox').show(); $('.dcomments').show(); break;
@@ -222,7 +220,7 @@ $(document).on("mouseleave", ".fileHover", function() {
 $(document).on("click", ".downloads", function(event) {
 	event.stopPropagation();
 	var fname = $($(this).parent().parent().prev()).text(); // this gets the file name from fileTitle class
-	url = '/downloads/'+dropName+'/'+fname;
+	url = '/downloads/'+folderName+'/'+fname;
 	var dwindow = window.open(url,'location=no');
 
 });
@@ -260,17 +258,12 @@ $(document).on("click", ".delete", function(event) {
     url: url,
     data : data,
     success: function(data, textStatus) {
-    	alert(data);
        if(data == "success")
-       {
        		location.reload();
-       }
        else if(data == "comments")
-       {
        		$('#commentContent_'+arr[1]).remove();
-       }
        else
-       	alert("Curse Us!! not deleted due to some internal problem");
+       		alert("Curse Us!! not deleted due to some internal problem");
     }
 	});
 });
@@ -448,6 +441,7 @@ $(document).on('click', '#emailFiles', function(event){
 	var data = {};
 	var to = $("input[name='email']").val();
 	data['to'] = to;
+	data['guestsPwd'] = $('input[name="guestsPwd"]').val();
 	$("#sharableLink").html('');
 	$("input[name='fileSelect']:checked").each( function () {
 		var temp = {};

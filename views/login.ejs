@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Login</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="/css/login.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<div class="modal" id="loginModal" data-backdrop="static" data-keyboard="false" aria-hidden="true" style="background-color: #C0C0C0;">
+<div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+        <div class="modal-body" >
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true" style="color: white;">&times;</span>
+            </button>
+            
+                <div class="guestLogin float col-md-4"> 
+                    <h3>Guest</h3><br>
+                    <form action="/login/<%= data.drop %>" method="post">
+                        <input type="hidden" name="email" value="guest">
+                        <% if (data.guest) { %>
+                            <input type="password" class="form-control" name="password" placeholder="Enter Guest Password" required autofocus>
+                        <% } else { %>                        
+                            <input type="hidden" name="password" value="a">
+                            <% } %>
+                        <br><br>
+                        <center><button type="submit" class="btn btn-primary">Enter as Guest</button></center>
+
+                    </form>
+                </div>
+            <% if (data.admin) { %>
+            <div class="wrapper float col-md-2">
+                <div class="text">OR</div>
+            </div>
+            <% } %>
+            <% if (data.admin) { %>
+            <div class="adminLogin float col-md-6">
+                    <form action="/login/<%= data.drop %>" method="post">
+                    <h3>Admin</h3><br>
+                    <input type="email" class="form-control" name="email" placeholder="Enter Admin Email" required>
+                    <br><br>
+                    <input type="password" class="form-control" name="password" placeholder="Enter Admin Password" required>
+                    <br><br>
+                    <button type="submit" class="btn btn-primary">Enter as Admin</button>
+                </form>
+            </div>
+            <% } %>
+        </div>
+    </div>
+</div>
+</div>
+
+<script type="text/javascript">
+	$('#loginModal').modal('show');
+</script>
+
+</body>
+</html>

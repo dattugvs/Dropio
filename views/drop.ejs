@@ -19,8 +19,7 @@
     <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
 </head>
 
-<body >
-    <!-- oncontextmenu="return false" onkeydown="return false;" onmousedown="return false;"> -->
+<body>
     <div class="modal fade" id="fileviewModal" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -61,12 +60,15 @@
     </div>
   </div>
 </div> 
-            </div>
+</div>
+
     <div class="drop">
         <div class="col-md-10 dropOptions">
             <div id="options">
                 <br>
-                <h4>drop.io/<%= drop.drop %></h4>
+                <div class="dropcontentList hidden"><%= drop %></div>
+                <div class="userRole hidden"><%= role %></div>
+                <h4>drop.io/<%= dropAuth.drop %></h4>
                 <div class="buttons">
                     <button type="button" class="btn btn-default btn-xl" id="btn-addFiles" style="display: none;">
                         <div class="btn-icon">
@@ -97,8 +99,7 @@
                     </ul>
                     <div class="tabs-content">
                         <div class="content active" id="add_files" aria-hidden="false">
-                            <form method="post" action="/<%= drop.drop %>"
-                                enctype="multipart/form-data">
+                    <form method="post" action="/addfiles/<%= dropAuth.drop %>" enctype="multipart/form-data">
                                 <div class="file-drop-area">
                                     <i class="fa fa-files-o fa-2x"></i>
                                     <span class="file-msg js-set-number">&nbsp;Add Files (Select, Drag & Drop)</span>
@@ -111,7 +112,7 @@
                             </form>
                         </div>
                         <div class="content" id="add_notes" aria-hidden="true" tabindex="-1">
-                            <form method="post" action="/<%= drop.drop %>"
+                            <form method="post" action="/<%= dropAuth.drop %>"
                                 enctype="multipart/form-data">
                                 <div class="form-group">
                                     <h4>Add Notes:</h4>
@@ -131,7 +132,7 @@
                 <div class="vertical-tabs">
                     <ul class="tabs vertical" data-tab="">
                         <li class="tab-title active"><a href="#emailShare" aria-selected="true" tabindex="0">Email</a></li>
-                        <li class="tab-title"><a href="#emailAlerts" aria-selected="true" tabindex="0">Email Alerts</a></li>
+                        
                     </ul>
                     <div class="tabs-content">
                         <div class="content shareContent active" id="emailShare" aria-hidden="true" tabindex="-1">
@@ -201,14 +202,78 @@
             <div class="Dropfiles col-md-10">
                 <br>
                 <div class="dfiles" id="dfiles">
-        </div>
+                    
+                </div>
     </div>
+
 </div>
+        <% if (logout) { %>
+            <br><br>
+            <form action="/drop.io/<%= dropAuth.drop %>/logout">
+                <center><button type="submit" class="btn btn-primary">Logout</button></center>
+            </form>
+        <% } %> 
+        <% if (role == "admin") { %>
         <div class="col-md-2 settings">
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            <div class="admin">
+                <br><br><br><br>
+                <h4>Admin Details</h4>
+                <br>
+                <% if (!dropAuth.admin) { %>
+                <p>Please <b><i>provide admin credentials</i></b> to control guest permissions and to get updates on this drop. <b>This will appear only once</b>.</p>
+                <% } %>
+                <form method="post" action="/saveLogin/<%= dropAuth.drop %>">
+                    <% if (dropAuth.admin) { %>
+                        <label for="adminEmail">Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        <input type="email" name="adminEmail" placeholder="<%= dropAuth.admin %>" required><br><br>
+                        <label for="adminPwd">Password</label>
+                        <input type="password" name="adminPwd" placeholder="******" required><br><br>
+                    <% } else { %>
+                        <label for="adminEmail">Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                        <input type="email" name="adminEmail" placeholder="Enter Admin Email" required><br><br>
+                        <label for="adminPwd">Password</label>
+                        <input type="password" name="adminPwd" placeholder="Enter Admin Password" required><br><br>
+                    <% } %>
+                    <center><button type="submit" class="btn btn-primary">Save Changes</button></center>
+                </form>
+            </div>
+            <div class="guest">
+                <br>
+                <h4>Guest Permissions</h4>
+                <form method="post" action="/saveLogin/<%= dropAuth.drop %>">
+                    <label class="checkbox">
+                        <input type="checkbox" name="guests"  value="addFiles">
+                        <span class="checkmark"></span> 
+                        <span style="display:inline-block; width: 30px;"></span>
+                        Add files
+                    </label>
+                    <label class="checkbox">
+                        <input type="checkbox" name="guests"  value="comments">
+                        <span class="checkmark"></span>
+                        <span style="display:inline-block; width: 30px;"></span>
+                        Add Comments
+                    </label>
+                    <label class="checkbox ">
+                        <input type="checkbox" name="guests"  value="downloads">
+                        <span class="checkmark"></span>
+                        <span style="display:inline-block; width: 30px;"></span>
+                        Download Files
+                    </label>
+                    <label  class="checkbox ">
+                        <input type="checkbox" name="guests"  value="delete">
+                        <span class="checkmark"></span>
+                        <span style="display:inline-block; width: 30px;"></span>
+                        Delete Files
+                    </label>
+                </form>
+                    <br>
+                    <center><button type="submit" class="btn btn-primary">Save Changes</button></center>
+            </div> 
         </div>
+        <% } %>
     </div>
     <div style="clear:both;"></div>
+
     </div>
     <br>
     <script type="text/javascript" src="/js/drop.js"></script>

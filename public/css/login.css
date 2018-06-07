@@ -1,0 +1,27 @@
+.float {
+  display: inline-block;
+  float: left;
+}
+.wrapper {
+  position: relative;
+  height: 300px;
+  text-align: center;
+}
+
+.wrapper:after {
+  content: " ";
+  position: absolute;
+  left: 50%;
+  height: 100%;
+  border-left: 2px solid black;
+}
+
+.text {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  padding: 5px;
+  background-color: white;
+  transform: translateX(-50%) translateY(-50%);
+  z-index: 1;
+}

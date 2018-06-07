@@ -182,8 +182,6 @@ function checkboxList(guests)
 
 function showSharedDrops(shared)
 {
-	if(shared.length == 0)
-		return;
 	var head = "<br><h4>Shared Drops</h4>";
 	$( ".shared" ).append(head);
 	var ol = '<ol class="sharedList">';

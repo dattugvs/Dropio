@@ -48,7 +48,7 @@
   position: relative;
   display: block;
   width: 100%;
-  height: 200px;
+  height: 205px;
   padding: 10px;
   text-decoration: none;
   text-align: center;
@@ -69,7 +69,7 @@
   display: block;
 }
 .content {
-  height: 400px;
+  height: 410px;
   border: 1px  solid black;
   border-left: 0;
 }

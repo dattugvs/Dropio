@@ -7,7 +7,7 @@ var dropSchema = mongoose.Schema({
 	guests 	   : [String],
  	files 	   : [{fname:String, comments:[{name:String, comment : String}]}],
 	notes	   : [{title: String, notes: String, comments : [{name:String, comment : String}]}],
-	folderName : String,
+	parentDrop : String,
 	shared     : [String]
 });
 
@@ -24,10 +24,14 @@ loginSchema.methods.generateHash = function(password) {
 
 loginSchema.methods.validPassword = function(password, type)
 {
-	if(type == "adminPwd")
+	if(type == "admin")
   		return bcrypt.compareSync(password, this.adminPwd);
   	else
+  	{
+  		if(this.guestsPwd == "")
+  			return true;
   		return bcrypt.compareSync(password, this.guestsPwd); 
+  	}
 };
 
 var Drop  = mongoose.model('Drop', dropSchema);

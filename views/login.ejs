@@ -17,6 +17,9 @@
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true" style="color: white;">&times;</span>
             </button>
+            <% if (message.length>0 && message!="success guest" && message!="success admin") { %>
+                <div class="alert alert-danger"><%= message %></div>
+            <% } %>
             
                 <div class="guestLogin float col-md-4"> 
                     <h3>Guest</h3><br>

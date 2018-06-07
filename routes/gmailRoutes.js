@@ -14,7 +14,7 @@ module.exports = function (app)
 		console.log(req.body);
 		var id = mongoose.Types.ObjectId();
 		req.body['drop'] = id.toString();
-		req.body['folderName'] = req.params.drop;
+		req.body['parentDrop'] = req.params.drop;
 		var url = 'http://localhost:4000/drop.io/'+id.toString();
 		
 		var text = 'This sharable link redirects to shared files from the drop named '+req.params.drop+':\n\n'+url
@@ -35,6 +35,8 @@ module.exports = function (app)
 
 		var newUpload = models.Drop(req.body);
 		var newLogin  = models.Login(req.body);
+		if(newLogin.guestsPwd!="")
+			newLogin.guestsPwd = newLogin.generateHash(newLogin.guestsPwd);
 		console.log("email:")
 		console.log(req.body);
 		console.log(newLogin);
@@ -46,24 +48,37 @@ module.exports = function (app)
 			{
 				if(err)
 					res.end("error");
-				transporter.sendMail(mailOptions, function(error, info)
+				if(req.body.to!='')
 				{
-		  			if(error)
-		  			{
-		    			console.log(error);
-		    			res.end("error");
-		  			}
-		  			if(info)
-		  			{
-		    			console.log('Email sent: ' + info.response);
-		    			models.Drop.update({'drop':req.params.drop},{'$push':{'shared':url}}, (err, updatedDrop) => 
-		    			{
-		    				if(updatedDrop)
-		    					res.end(url);
-		    				res.end("error");
-		    			});
-		  			}
-				});				
+					transporter.sendMail(mailOptions, function(error, info)
+					{
+			  			if(error)
+			  			{
+			    			console.log(error);
+			    			res.end("error");
+			  			}
+			  			if(info)
+			  			{
+			    			console.log('Email sent: ' + id);
+			    			models.Drop.update({'drop':req.params.drop},{'$push':{'shared':id}}, (err, updatedDrop) => 
+			    			{
+			    				if(updatedDrop)
+			    					res.end(url);
+			    				res.end("error");
+			    			});
+			  			}
+					});
+				}
+				else
+				{
+					models.Drop.update({'drop':req.params.drop},{'$push':{'shared':id}}, (err, updatedDrop) => 
+			    	{
+			    		if(updatedDrop)
+			    			res.end(url);
+			    			res.end("error");
+			    	});
+				}
+
 			});
 		});
 	});

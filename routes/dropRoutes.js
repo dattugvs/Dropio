@@ -1,5 +1,6 @@
 var models = require('../models/schema');
 var LocalStrategy = require('passport-local').Strategy;
+var bcrypt = require('bcrypt-nodejs');
 
 module.exports = function (app, passport)
 {
@@ -74,7 +75,7 @@ module.exports = function (app, passport)
 				console.log(dropAuth);
 				if(req.user)
 				{
-					if(req.params.drop == req.user.drop || drop['folderName'] == req.user.drop) // same drop (no loginReq required)
+					if(req.params.drop == req.user.drop || drop['parentDrop'] == req.user.drop) // same drop (no loginReq required)
 						role = req.user.role;
 					else
 						loginReq = true; // other drop (not shared) loginReq may be required
@@ -92,22 +93,41 @@ module.exports = function (app, passport)
 					logout = true;
 
 				if(loginReq)
-					res.render('login', {data:dropAuth});
+					res.render('login', {data:dropAuth, message:req.flash('loginMessage')});
 				else
 					res.render('drop',{'drop':JSON.stringify(drop), 'role':role, 'dropAuth':dropAuth, 'logout':logout});
 			});
 		});
 	});
 
-	app.post('/saveLogin/:drop', (req, res) => {
-		models.Login.update({'drop':req.params.drop}, {"$set": req.body}, (err, updatedLogin) => {
+	app.post('/saveLogin/:drop', (req, res) => 
+	{
+		var tempLogin = models.Login();
+		
+		if(req.body.guestsPwd)
+			req.body.guestsPwd = tempLogin.generateHash(req.body.guestsPwd);
+		else if(req.body.adminPwd)
+			req.body.adminPwd = tempLogin.generateHash(req.body.adminPwd);
+		
+		models.Login.update({'drop':req.params.drop}, {"$set": req.body}, (err, updatedLogin) => 
+		{
 			if(err)
 				res.end("error");
-			console.log(updatedLogin);
-			if(updatedLogin.nModified > 0)
+			if(req.body.guests)
+			{
+				models.Drop.update({'drop':req.params.drop}, {"$set": req.body}, (err, updatedDrop) =>
+				{
+					if(err)
+						res.end("error");
+					if(updatedDrop)
+					{
+						console.log(updatedDrop);
+						res.redirect('/drop.io/'+req.params.drop);
+					}
+				});
+			}	
+			else 
 				res.redirect('/drop.io/'+req.params.drop);
-			else
-				res.render('404',{'data':{'type':'drop', 'status':'404', 'page_title':'Drop'}});
 		});
 	});
 
@@ -115,6 +135,14 @@ module.exports = function (app, passport)
 		req.logout();
 		res.redirect('/drop.io/'+req.params.drop);
 	});
+}
 
-	
+function getHash(password)
+{
+	bcrypt.hash(password, (err,hash) => {
+  		if(err)
+  			return(password);
+  		console.log(hash);
+  		return hash;
+	});
 }

@@ -38,6 +38,7 @@ module.exports = function (passport) {
 				{
 					var newLogin = models.Login(req.body);
 					console.log(newLogin);
+					newLogin.guestsPwd = newLogin.generateHash(newLogin.guestsPwd);
 					newLogin.save((err, logindetails) =>
 					{
 						if(err)
@@ -62,23 +63,44 @@ module.exports = function (passport) {
     		console.log(req.body);
     		if(email == "guest")
     		{
-    			 msg = "success guest";
-    			// query['guestsPwd'] = password;
+    			msg = "success guest";
     		}
     		else
     		{
     			msg = "success admin";
-    			// query['adminEmail'] = email;
-    			// query['adminPwd']   = password;
+    			query['adminEmail'] = email;
     		}
-    		// console.log(query);
-    		models.Drop.findOne(query, (err, drop) =>
+    		models.Login.findOne(query, (err, login) =>
     		{
+    			console.log("login from query:");
+    			console.log(login);
     			if(err)
-    				return done(null, false, req.flash('loginMessage', 'Some Error occured !!'));
-    			else if(drop)
+    				return done(null, false, req.flash('loginMessage', 'Oops, some error occured !!'));
+    			else if(login)
     			{
-    				return done(null, drop, req.flash('loginMessage', msg));
+    				var type;
+    				if(query['adminEmail'])
+    					type = "admin";
+    				else 
+    					type = "guest";
+    				var isMatch =  login.validPassword(password, type);
+					
+					console.log("isMatch:"+type);
+    				console.log(isMatch);
+    				if(isMatch)
+    				{
+    					models.Drop.findOne({'drop':req.params.drop}, (err, drop) => 
+    					{
+	    					if(err)
+	    						return done(null, false, req.flash('loginMessage', 'Oops, some error occured !!'));
+	    					else if(drop)
+	    						return done(null, drop, req.flash('loginMessage', msg));
+	    					else
+	    						return done(null, false, req.flash('loginMessage', 'Invalid Details !!'));
+    					});
+    				}
+    				else
+    					return done(null, false, req.flash('loginMessage', 'Invalid Details !!'));
     			}
     			else
     				return done(null, false, req.flash('loginMessage', 'Invalid Details !!'));	

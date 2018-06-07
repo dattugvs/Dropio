@@ -31,7 +31,7 @@ var files, view;
 var notes, links;
 var guests = [];
 var folderName;
-var role;
+var role, shared;
 function getFiles()
 {
 	dropName = (window.location.pathname).split('/')[2];
@@ -41,9 +41,10 @@ function getFiles()
 	links = drop.links;
 	guests = drop.guests;
 	role   = $('.userRole').html();
-	folderName = drop['folderName'];
+	folderName = drop['parentDrop'];
 	if(!folderName)
 		folderName = drop.drop;
+	shared = drop.shared;
 	Media();
 }
 
@@ -79,7 +80,7 @@ function showFiles(files, title)
 
 		if(ext == 'jpg' || ext == 'png' || ext == 'jpeg' || ext == 'bmp' || ext == 'gif')
 		{
-			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete hidden" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview"><img src="/uploads/'+folderName+'/'+files[i].fname+'" width="200px" height="150px"></div></div>';
+			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete hidden" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview"><img src="/uploads/'+folderName+'/'+files[i].fname+'" onerror="this.src=\'/images/image404.png\'" width="200px" height="150px"></div></div>';
 		}
 		
 		else if(ext == 'mp3' || ext=="ogg" || ext=="wav")
@@ -161,11 +162,38 @@ function Media()
 	showFiles(video, 'Video');
 	showFiles(pdf, 'Documents');
 	showFiles(others, 'Others');
-	alert(role);
+	showSharedDrops(shared);
+	//alert(role);
+	checkboxList(guests);
 	if(role == "guest")
 		guestOptions(guests);
 	else
 		guestOptions(['addFiles', 'comments', 'downloads', 'share', 'delete']);
+}
+
+function checkboxList(guests)
+{
+	console.log(guests);
+	for(var i=0; i<guests.length; i++)
+	{
+		$('#guest_'+guests[i]).prop('checked', true);	
+	}
+}
+
+function showSharedDrops(shared)
+{
+	if(shared.length == 0)
+		return;
+	var head = "<br><h4>Shared Drops</h4>";
+	$( ".shared" ).append(head);
+	var ol = '<ol class="sharedList">';
+	for(var i=0; i<shared.length; i++)
+	{
+		var li = '<li><a target="_blank" href="http://localhost:4000/drop.io/'+shared[i]+'"><div>'+shared[i]+'</div></a></li>';
+		ol = ol + li;
+	}
+	ol = ol + '</ol>'
+	$( ".shared" ).append(ol);
 }
 
 function guestOptions(permissions)
@@ -174,7 +202,7 @@ function guestOptions(permissions)
 	{
 		switch(permissions[i])
 		{
-			case 'addFiles':  $('#btn-addFiles').show(); $('.addFilesbox').show();  break;
+			case 'addFiles':  $('#guest_'+permissions[i]).prop('checked', true); $('#btn-addFiles').show(); $('.addFilesbox').show();  break;
 			case 'comments':  $('.comments').show(); $('.commentsbox').show(); $('.dcomments').show(); break;
 			case 'downloads': $('.downloads').show(); $('.downloadsbox').show();  break;
 			case 'share':     $('#btn-shareFiles').show();  break;
@@ -239,7 +267,7 @@ $(document).on("click", ".delete", function(event) {
 			typeId = arr[1];
 			commid = comments[arr[3]]._id;
 			data = {'type': type, 'typeId':typeId, 'commentId':commid};
-			alert(arr);
+			//alert(arr);
 		}
 		else
 		{
@@ -396,7 +424,7 @@ function submitNewComment()
 	var name = $("#comment_name").val();
 	var comment = $("#comment").val();
 	var id = $("#comment_id").val();
-	alert(id);
+	//alert(id);
 	var url = '/comments/'+dropName+'/'+id;
 
 	$.ajax({
@@ -441,7 +469,7 @@ $(document).on('click', '#emailFiles', function(event){
 	var data = {};
 	var to = $("input[name='email']").val();
 	data['to'] = to;
-	data['guestsPwd'] = $('input[name="guestsPwd"]').val();
+	data['guestsPwd'] = $('#sharepwd').val();
 	$("#sharableLink").html('');
 	$("input[name='fileSelect']:checked").each( function () {
 		var temp = {};
@@ -468,6 +496,9 @@ $(document).on('click', '#emailFiles', function(event){
     	$('.file .shareBox').hide();
     	$('.sharableLink').show();
     	$("#sharableLink").html(data);
+    	var id = data.split('http://localhost:4000/drop.io/')[1];
+    	shared.push(id);
+    	$('.shared .sharedList').append('<li><a target="_blank" href="'+id+'"><div>'+id+'</div></a></li>');
     }
 	});
 });

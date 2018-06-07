@@ -63,7 +63,7 @@
 </div>
 
     <div class="drop">
-        <div class="col-md-10 dropOptions">
+        <div class="col-md-9 dropOptions">
             <div id="options">
                 <br>
                 <div class="dropcontentList hidden"><%= drop %></div>
@@ -131,7 +131,7 @@
             <div id="shareFiles" class="hidden">
                 <div class="vertical-tabs">
                     <ul class="tabs vertical" data-tab="">
-                        <li class="tab-title active"><a href="#emailShare" aria-selected="true" tabindex="0">Email</a></li>
+                        <li class="tab-title active"><a href="#emailShare" aria-selected="true" tabindex="0" style="height: 410px;">Email</a></li>
                         
                     </ul>
                     <div class="tabs-content">
@@ -163,8 +163,8 @@
                         Delete Files
                     </label>
                     <br>
-                    Email to share : <span style="display:inline-block; width: 35px;"></span><input type="email" name="email" autofocus><br><br>
-                    Password :<span style="display:inline-block; width: 75px;"></span><input type="password" name="guestsPwd">&nbsp;(optional)<br><br>
+                    Email to share : <span style="display:inline-block; width: 35px;"></span><input type="email" name="email" autofocus>&nbsp;(optional)<br><br>
+                    Password :<span style="display:inline-block; width: 75px;"></span><input type="password" name="guestsPwd" id="sharepwd">&nbsp;(optional)<br><br>
                     <button id="emailFiles" class="btn btn-success">Share Files</button>            
                 </div>
                             <div class="float col-md-4 shareEmail">
@@ -172,7 +172,7 @@
                                 <p><b>&rArr; </b>Click this button&nbsp;
                                 <button type="button" id="selectFiles" class="btn btn-primary">Select Files</button></p>
                                 <p><b>&rArr; </b>Select all files to be shared by clicking on the checkbox on top of the file.</p>
-                                <p><b>&rArr; </b>Provide 'valid' email address and other details to share the drop files.</p>
+                                <p><b>&rArr; </b>Provide 'valid' email address (optional) and other details to share the drop files.</p>
 
                                 <p class="sharableLink"><b>&rArr; </b>Your sharable drop link:</p>
                                 <textarea class="form-control" id="sharableLink" rows="2"></textarea>
@@ -210,11 +210,12 @@
         <% if (logout) { %>
             <br><br>
             <form action="/drop.io/<%= dropAuth.drop %>/logout">
-                <center><button type="submit" class="btn btn-primary">Logout</button></center>
+                <span style="display:inline-block; width: 80px;"></span>
+                <button type="submit" class="btn btn-default">Logout</button>
             </form>
         <% } %> 
         <% if (role == "admin") { %>
-        <div class="col-md-2 settings">
+        <div class="col-md-3 settings">
             <div class="admin">
                 <br><br><br><br>
                 <h4>Admin Details</h4>
@@ -227,14 +228,15 @@
                         <label for="adminEmail">Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                         <input type="email" name="adminEmail" placeholder="<%= dropAuth.admin %>" required><br><br>
                         <label for="adminPwd">Password</label>
-                        <input type="password" name="adminPwd" placeholder="******" required><br><br>
+                        <input type="password" name="adminPwd" placeholder="**********" required pattern=".{6,}" title="6 characters minimum"><br><br>
                     <% } else { %>
                         <label for="adminEmail">Email&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
                         <input type="email" name="adminEmail" placeholder="Enter Admin Email" required><br><br>
                         <label for="adminPwd">Password</label>
-                        <input type="password" name="adminPwd" placeholder="Enter Admin Password" required><br><br>
+                        <input type="password" name="adminPwd" placeholder="Enter Admin Password" required pattern=".{6,}" title="6 characters minimum"><br><br>
                     <% } %>
-                    <center><button type="submit" class="btn btn-primary">Save Changes</button></center>
+                    <span style="display:inline-block; width: 60px;"></span>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
                 </form>
             </div>
             <div class="guest">
@@ -242,33 +244,44 @@
                 <h4>Guest Permissions</h4>
                 <form method="post" action="/saveLogin/<%= dropAuth.drop %>">
                     <label class="checkbox">
-                        <input type="checkbox" name="guests"  value="addFiles">
+                        <input type="checkbox" name="guests" id="guest_addFiles" value="addFiles">
                         <span class="checkmark"></span> 
                         <span style="display:inline-block; width: 30px;"></span>
                         Add files
                     </label>
                     <label class="checkbox">
-                        <input type="checkbox" name="guests"  value="comments">
+                        <input type="checkbox" name="guests" id="guest_comments" value="comments">
                         <span class="checkmark"></span>
                         <span style="display:inline-block; width: 30px;"></span>
                         Add Comments
                     </label>
                     <label class="checkbox ">
-                        <input type="checkbox" name="guests"  value="downloads">
+                        <input type="checkbox" name="guests" id="guest_downloads" value="downloads">
                         <span class="checkmark"></span>
                         <span style="display:inline-block; width: 30px;"></span>
                         Download Files
                     </label>
                     <label  class="checkbox ">
-                        <input type="checkbox" name="guests"  value="delete">
+                        <input type="checkbox" name="guests" id="guest_delete" value="delete">
                         <span class="checkmark"></span>
                         <span style="display:inline-block; width: 30px;"></span>
                         Delete Files
                     </label>
-                </form>
+                    <% if (dropAuth.guest) { %>
+                        <label>Password </label>
+                        <input type="password" name="guestsPwd" placeholder="**********" pattern=".{6,}" title="6 characters minimum"><br><br>
+                    <% } else { %>
+                        <label>Password </label>
+                        <input type="password" name="guestsPwd" placeholder="Set Guest Password" pattern=".{6,}" title="6 characters minimum"><br><br>
+                    <% } %>
                     <br>
-                    <center><button type="submit" class="btn btn-primary">Save Changes</button></center>
-            </div> 
+                    <span style="display:inline-block; width: 60px;"></span>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                </form>   
+            </div>
+            <div class="shared">
+                
+            </div>
         </div>
         <% } %>
     </div>

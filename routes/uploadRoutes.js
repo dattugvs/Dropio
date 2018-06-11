@@ -3,6 +3,7 @@ var multer  = require('multer');
 var fs = require('fs');
 var mkdirp = require('mkdirp');
 var dir = '';
+var path = require('path');
 
 var storage = multer.diskStorage({
 	destination : (req, file, cb) => {

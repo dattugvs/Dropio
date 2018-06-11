@@ -7,7 +7,7 @@ var path = require('path');
 
 var storage = multer.diskStorage({
 	destination : (req, file, cb) => {
-		var dir = '/home/ubuntu/Dropio/public/uploads/'+req.params.dropName;
+		var dir = '/home/ubuntu/Dropio/public/uploads/'+req.params.drop;
 		if (!fs.existsSync(dir)){
 		    fs.mkdirSync(dir);
 		}

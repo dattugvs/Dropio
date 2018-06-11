@@ -22,7 +22,7 @@ module.exports = function (app, passport)
 		{
 		    successRedirect : '/drop.io/'+drop,
 	        failureRedirect : '/drop.io', 
-		    failureFlash : true 
+		    failureFlash : true
 		})(req,res, next)
 	}
 
@@ -59,43 +59,45 @@ module.exports = function (app, passport)
 				}
 				if(!drop || !login)
 					res.render('404',{'data':{'type':'drop', 'status':'404', 'page_title':'Drop'}});
-				
-				var dropAuth = {'drop':req.params.drop};
-				if(login['guestsPwd'])
-					dropAuth['guest'] = true;
-				
-				if(login['adminEmail'])
-				{
-					dropAuth['admin'] = login['adminEmail'];
-				}
-
-				var loginReq = false; // login Requirement
-				var logout   = false;
-				var role = "guest";
-				console.log(dropAuth);
-				if(req.user)
-				{
-					if(req.params.drop == req.user.drop || drop['parentDrop'] == req.user.drop) // same drop (no loginReq required)
-						role = req.user.role;
-					else
-						loginReq = true; // other drop (not shared) loginReq may be required
-				}
-				else // not logged in... loginReq may require
-					loginReq = true;
-
-				if(loginReq) // loginReq may be required
-				{
-					if(!dropAuth['admin'] && !dropAuth['guest']) // no credentials -> no loginReq;  drop open as guest
-						loginReq = false;	// no loginReq requirement	
-				}
-
-				if(req.user)
-					logout = true;
-
-				if(loginReq)
-					res.render('login', {data:dropAuth, message:req.flash('loginMessage')});
 				else
-					res.render('drop',{'drop':JSON.stringify(drop), 'role':role, 'dropAuth':dropAuth, 'logout':logout});
+				{
+					var dropAuth = {'drop':req.params.drop};
+					if(login['guestsPwd'])
+						dropAuth['guest'] = true;
+					
+					if(login['adminEmail'])
+					{
+						dropAuth['admin'] = login['adminEmail'];
+					}
+
+					var loginReq = false; // login Requirement
+					var logout   = false;
+					var role = "guest";
+					console.log(dropAuth);
+					if(req.user)
+					{
+						if(req.params.drop == req.user.drop || drop['parentDrop'] == req.user.drop) // same drop (no loginReq required)
+							role = req.user.role;
+						else
+							loginReq = true; // other drop (not shared) loginReq may be required
+					}
+					else // not logged in... loginReq may require
+						loginReq = true;
+
+					if(loginReq) // loginReq may be required
+					{
+						if(!dropAuth['admin'] && !dropAuth['guest']) // no credentials -> no loginReq;  drop open as guest
+							loginReq = false;	// no loginReq requirement	
+					}
+
+					if(req.user)
+						logout = true;
+
+					if(loginReq)
+						res.render('login', {data:dropAuth, message:req.flash('loginMessage')});
+					else
+						res.render('drop',{'drop':JSON.stringify(drop), 'role':role, 'dropAuth':dropAuth, 'logout':logout});
+				}
 			});
 		});
 	});

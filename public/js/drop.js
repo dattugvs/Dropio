@@ -80,7 +80,7 @@ function showFiles(files, title)
 
 		if(ext == 'jpg' || ext == 'png' || ext == 'jpeg' || ext == 'bmp' || ext == 'gif')
 		{
-			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete hidden" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview"><img src="/uploads/'+folderName+'/'+files[i].fname+'" onerror="this.src=\'/images/image404.png\'" width="200px" height="150px"></div></div>';
+			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete hidden" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview" style="background-image: url("/uploads/'+folderName+'/'+files[i].fname+'")"></div></div>';
 		}
 		
 		else if(ext == 'mp3' || ext=="ogg" || ext=="wav")
@@ -187,7 +187,7 @@ function showSharedDrops(shared)
 	var ol = '<ol class="sharedList">';
 	for(var i=0; i<shared.length; i++)
 	{
-		var li = '<li><a target="_blank" href="http://localhost:4000/drop.io/'+shared[i]+'"><div>'+shared[i]+'</div></a></li>';
+		var li = '<li><a target="_blank" href="http://ec2-18-219-6-249.us-east-2.compute.amazonaws.com:4000/drop.io/'+shared[i]+'"><div>'+shared[i]+'</div></a></li>';
 		ol = ol + li;
 	}
 	ol = ol + '</ol>'
@@ -494,7 +494,7 @@ $(document).on('click', '#emailFiles', function(event){
     	$('.file .shareBox').hide();
     	$('.sharableLink').show();
     	$("#sharableLink").html(data);
-    	var id = data.split('http://localhost:4000/drop.io/')[1];
+    	var id = data.split('http://ec2-18-219-6-249.us-east-2.compute.amazonaws.com:4000/drop.io/')[1];
     	shared.push(id);
     	$('.shared .sharedList').append('<li><a target="_blank" href="'+id+'"><div>'+id+'</div></a></li>');
     }

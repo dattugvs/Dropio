@@ -187,7 +187,7 @@ function showSharedDrops(shared)
 	var ol = '<ol class="sharedList">';
 	for(var i=0; i<shared.length; i++)
 	{
-		var li = '<li><a target="_blank" href="http://ec2-18-219-6-249.us-east-2.compute.amazonaws.com:4000/drop.io/'+shared[i]+'"><div>'+shared[i]+'</div></a></li>';
+		var li = '<li><a target="_blank" href="http://ec2-18-219-6-249.us-east-2.compute.amazonaws.com:3000/drop.io/'+shared[i]+'"><div>'+shared[i]+'</div></a></li>';
 		ol = ol + li;
 	}
 	ol = ol + '</ol>'
@@ -494,7 +494,7 @@ $(document).on('click', '#emailFiles', function(event){
     	$('.file .shareBox').hide();
     	$('.sharableLink').show();
     	$("#sharableLink").html(data);
-    	var id = data.split('http://ec2-18-219-6-249.us-east-2.compute.amazonaws.com:4000/drop.io/')[1];
+    	var id = data.split('http://ec2-18-219-6-249.us-east-2.compute.amazonaws.com:3000/drop.io/')[1];
     	shared.push(id);
     	$('.shared .sharedList').append('<li><a target="_blank" href="'+id+'"><div>'+id+'</div></a></li>');
     }

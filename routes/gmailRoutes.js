@@ -15,7 +15,7 @@ module.exports = function (app)
 		var id = mongoose.Types.ObjectId();
 		req.body['drop'] = id.toString();
 		req.body['parentDrop'] = req.params.drop;
-		var url = 'http://ec2-18-219-6-249.us-east-2.compute.amazonaws.com:4000/drop.io/'+id.toString();
+		var url = 'http://ec2-18-219-6-249.us-east-2.compute.amazonaws.com:3000/drop.io/'+id.toString();
 		
 		var text = 'This sharable link redirects to shared files from the drop named '+req.params.drop+':\n\n'+url
 		var mailOptions = {

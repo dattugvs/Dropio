@@ -192,6 +192,11 @@ progress::-webkit-progress-value {
   /*margin-top: 30px;*/
 }
 #imgsrc {
+  min-height: 200px;
+  width: 100%;
+  height: 100%;
+}
+.image {
   width: 100%;
   height: 100%;
 }
@@ -203,4 +208,18 @@ progress::-webkit-progress-value {
 .Time {
   padding-left: 65%;
   font-size: 12px;
+}
+
+.notification .alert {
+  background-color: #3f3f3f;
+  color: white;
+  position: fixed;
+  bottom: 5px;
+  left:65%;
+  width: 30%;
+  z-index : 100;
+}
+
+#notifyMsg {
+  
 }

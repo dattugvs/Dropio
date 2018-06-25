@@ -20,52 +20,59 @@
 </head>
 
 <body>
-    <div class="modal fade" id="fileviewModal" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-    <div class="modal-body">
+<div class="modal fade" id="fileviewModal" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true" style="color: white;">&times;</span>
+                </button>
+                <div class="embed-responsive embed-responsive-16by9 video hidden">
+                    <video controls="controls" id="playvideo" src="" controlsList="nodownload">
+                        Your browser does not support the video.
+                    </video>
+                </div>
+                <div class="audio hidden">
+                    <center>
+                        <audio controls="controls" id="playaudio" src="" controlsList="nodownload">
+                            Your browser does not support the audio.
+                        </audio>
+                    </center>
+                </div>
+                <div class="image hidden">
+                    <img id="imgsrc" src="" alt="Oops! Image not loaded due to some problem !!">
+                </div>
 
-       <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true" style="color: white;">&times;</span>
-        </button>
+                <div class="pdf hidden">
+                    <iframe id="pdfsrc" src="" width="800px" height="600px"></iframe>
+                </div>
 
-        <div class="embed-responsive embed-responsive-16by9 video hidden">
-            <video controls="controls" id="playvideo" src="" controlsList="nodownload">
-                Your browser does not support the video.
-            </video>
+                <div class="doc hidden">
+                    <div id="#docfileTitle"></div>
+                </div>
+
+                <div class="dcomments"></div>
+            </div>
         </div>
-
-        <div class="audio hidden">
-            <center>
-                <audio controls="controls" id="playaudio" src="" controlsList="nodownload">
-                    Your browser does not support the audio.
-                </audio>
-
-            </center>
-        </div>
-        
-        <div class="image hidden">
-            <img id="imgsrc" src="" alt="Oops! Image not loaded due to some problem !!">
-        </div>
-
-        <div class="pdf hidden">
-            <iframe id="pdfsrc" src="" width="800px" height="600px"></iframe>
-        </div>
-
-        <div class="doc hidden">
-            <div id="#docfileTitle"></div>
-        </div>
-
-        <div class="dcomments hidden"></div>
     </div>
-  </div>
-</div> 
+</div>
+
+<div class="notification hidden">
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <div id="notifyMsg">/* notifies message */</div>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close" style="color: white;">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
 </div>
 
     <div class="drop">
         <div class="col-md-9 dropOptions">
             <div id="options">
                 <br>
+                <% if(message.length > 0) { %>
+                    <div class="alert alert-danger" role="alert" id="status"><%= message %></div>
+                <% } %>
                 <div class="dropcontentList hidden"><%= drop %></div>
                 <div class="userRole hidden"><%= role %></div>
                 <h4>drop.io/<%= dropAuth.drop %></h4>
@@ -99,7 +106,8 @@
                     </ul>
                     <div class="tabs-content">
                         <div class="content active" id="add_files" aria-hidden="false">
-                    <form method="post" action="/addfiles/<%= dropAuth.drop %>" enctype="multipart/form-data">
+                    <form method="post" action="/addfiles" enctype="multipart/form-data">
+                                <input type="hidden" name="drop" value="<%= dropAuth.drop %>">
                                 <div class="file-drop-area">
                                     <i class="fa fa-files-o fa-2x"></i>
                                     <span class="file-msg js-set-number">&nbsp;Add Files (Select, Drag & Drop)</span>
@@ -108,12 +116,13 @@
                                 <br>
                                 <progress class="progress" max="100" value="56"></progress>
                                 <br>
-                                <button class="btn btn-success">Add Files</button>
+                                <input type="submit" class="btn btn-primary" value="Add Files">
                             </form>
                         </div>
                         <div class="content" id="add_notes" aria-hidden="true" tabindex="-1">
-                            <form method="post" action="/<%= dropAuth.drop %>"
+                            <form method="post" action="/addFiles/
                                 enctype="multipart/form-data">
+                                <input type="hidden" name="drop" value="<%= dropAuth.drop %>">
                                 <div class="form-group">
                                     <h4>Add Notes:</h4>
                                     Notes Title:
@@ -138,25 +147,25 @@
                         <div class="content shareContent active" id="emailShare" aria-hidden="true" tabindex="-1">
                             <div class="float col-md-4">
                     <b>Guest Permissions : </b>
-                    <label style="display: none;" class="checkbox addFilesbox">
+                    <label style="display: none;" class="checkbox">
                         <input type="checkbox" name="guests"  value="addFiles">
                         <span class="checkmark"></span> 
                         <span style="display:inline-block; width: 30px;"></span>
                         Add files
                     </label>
-                    <label style="display: none;" class="checkbox commentsbox">
+                    <label style="display: none;" class="checkbox">
                         <input type="checkbox" name="guests"  value="comments">
                         <span class="checkmark"></span>
                         <span style="display:inline-block; width: 30px;"></span>
                         Add Comments
                     </label>
-                    <label style="display: none;" class="checkbox downloadsbox">
+                    <label style="display: none;" class="checkbox">
                         <input type="checkbox" name="guests"  value="downloads">
                         <span class="checkmark"></span>
                         <span style="display:inline-block; width: 30px;"></span>
                         Download Files
                     </label>
-                    <label style="display: none;" class="checkbox deletebox">
+                    <label style="display: none;" class="checkbox">
                         <input type="checkbox" name="guests"  value="delete">
                         <span class="checkmark"></span>
                         <span style="display:inline-block; width: 30px;"></span>
@@ -169,7 +178,7 @@
                 </div>
                             <div class="float col-md-4 shareEmail">
                                 <br>
-                                <p><b>&rArr; </b>Click this button&nbsp;
+                                <p><b>&rArr; </b>Click this button to &nbsp;
                                 <button type="button" id="selectFiles" class="btn btn-primary">Select Files</button></p>
                                 <p><b>&rArr; </b>Select all files to be shared by clicking on the checkbox on top of the file.</p>
                                 <p><b>&rArr; </b>Provide 'valid' email address (optional) and other details to share the drop files.</p>
@@ -207,13 +216,11 @@
     </div>
 
 </div>
-        <% if (logout) { %>
-            <br><br>
-            <form action="/drop.io/<%= dropAuth.drop %>/logout">
-                <span style="display:inline-block; width: 80px;"></span>
-                <button type="submit" class="btn btn-default">Logout</button>
-            </form>
-        <% } %> 
+        <br><br>
+        <form action="/drop.io/<%= dropAuth.drop %>/logout">
+            <span style="display:inline-block; width: 80px;"></span>
+            <button type="submit" class="btn btn-default">Logout</button>
+        </form>
         <% if (role == "admin") { %>
         <div class="col-md-3 settings">
             <div class="admin">

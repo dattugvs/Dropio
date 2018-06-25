@@ -62,7 +62,7 @@ module.exports = function (app, passport)
 				else
 				{
 					var dropAuth = {'drop':req.params.drop};
-					if(login['guestsPwd'])
+					if(login['guestsPwd']!="")
 						dropAuth['guest'] = true;
 					
 					if(login['adminEmail'])
@@ -71,32 +71,21 @@ module.exports = function (app, passport)
 					}
 
 					var loginReq = false; // login Requirement
-					var logout   = false;
 					var role = "guest";
-					console.log(dropAuth);
 					if(req.user)
 					{
 						if(req.params.drop == req.user.drop || drop['parentDrop'] == req.user.drop) // same drop (no loginReq required)
 							role = req.user.role;
 						else
-							loginReq = true; // other drop (not shared) loginReq may be required
+							loginReq = true; // other drop (not shared) loginReq required
 					}
 					else // not logged in... loginReq may require
 						loginReq = true;
 
-					if(loginReq) // loginReq may be required
-					{
-						if(!dropAuth['admin'] && !dropAuth['guest']) // no credentials -> no loginReq;  drop open as guest
-							loginReq = false;	// no loginReq requirement	
-					}
-
-					if(req.user)
-						logout = true;
-
 					if(loginReq)
 						res.render('login', {data:dropAuth, message:req.flash('loginMessage')});
 					else
-						res.render('drop',{'drop':JSON.stringify(drop), 'role':role, 'dropAuth':dropAuth, 'logout':logout});
+						res.render('drop',{'drop':JSON.stringify(drop), 'role':role, 'dropAuth':dropAuth, 'message':req.flash('dropMessage')});
 				}
 			});
 		});
@@ -136,6 +125,15 @@ module.exports = function (app, passport)
 	app.get('/drop.io/:drop/logout', (req,res)=>{
 		req.logout();
 		res.redirect('/drop.io/'+req.params.drop);
+	});
+
+	app.get('/uploads/:drop/:file', (req, res) => {
+		console.log(req.params.file);
+		res.redirect('/drop.io/'+req.params.drop);
+	});
+
+	app.get('/404/:type', (req, res) => {
+		res.render('404',{'data':{'type':req.params.type, 'status':'404', 'page_title':req.params.type}});
 	});
 }
 

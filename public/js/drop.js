@@ -32,6 +32,7 @@ var notes, links;
 var guests = [];
 var folderName;
 var role, shared;
+
 function getFiles()
 {
 	dropName = (window.location.pathname).split('/')[2];
@@ -58,7 +59,7 @@ function showNotes(notes, title)
 		var timestamp = notes[i]._id.toString().substring(0,8);
 		var date = new Date( parseInt( timestamp, 16 ) * 1000 );
 		var time = moment(date).format('ddd DD-MM-YYYY hh:mm A');	
-		div2 = '<div class="dnotes" col-md-12" style="cursor:default;"><br><h5>'+notes[i].title+'</h5>'+notes[i].notes+'<br><br><div class="notesDetails">'+time+'<span style="display:inline-block; width: 20px;"></span><span class="comments fileBody hidden" style="border:none;" id="Notes_'+i+'" data-placement="bottom" title="Comment" data-toggle="modal" data-target="#fileviewModal"><i class="fa fa-commenting-o" style="font-size:25px;" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete hidden" id="notes_'+i+'" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash-o fa-x" style="font-size:25px;" aria-hidden="true"></i></span></div></div>';
+		div2 = '<div class="dnotes" col-md-12" style="cursor:default;"><br><h5>'+notes[i].title+'</h5>'+notes[i].notes+'<br><br><div class="notesDetails">'+time+'<span style="display:inline-block; width: 20px;"></span><span class="comments fileBody hidden" style="border:none;" id="Notes_'+i+'" data-placement="bottom" title="Comment" data-toggle="modal" data-target="#fileviewModal"><i class="fa fa-commenting-o" style="font-size:25px;" aria-hidden="true"></i></span><span style="display:inline-block; width: 30px;"></span><span class="delete hidden" id="notes_'+i+'" data-toggle="tooltip" data-placement="bottom" title="Delete Notes"><i class="fa fa-trash-o fa-x" style="font-size:25px;" aria-hidden="true"></i></span></div></div>';
 		div = div + div2+'<hr>';
 	}
 	div = div + '</div></div><br>';
@@ -78,25 +79,27 @@ function showFiles(files, title)
 		var arr = files[i].fname.split('.');
 		var ext = (arr[arr.length-1]).toLowerCase();
 
+		var fileOptions = '<div class="col-md-12 fileOptions"><center><div class="row"><div class="downloads hidden col"><span data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span></div><div class="comments col"><span  data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span></div><div class="delete hidden col"><span data-toggle="tooltip" data-placement="bottom" title="Delete File"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></span></div></div></center></div>';
+
 		if(ext == 'jpg' || ext == 'png' || ext == 'jpeg' || ext == 'bmp' || ext == 'gif')
 		{
-			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete hidden" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview" style="background-image: url("/uploads/'+folderName+'/'+files[i].fname+'")"></div></div>';
+			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div>'+fileOptions+'</div><div id="fileview_'+title+'_'+i+'" class="fileview"><img src="/uploads/'+folderName+'/'+files[i].fname+'" width="200px" height="150px"></div></div>';
 		}
 		
 		else if(ext == 'mp3' || ext=="ogg" || ext=="wav")
-			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete hidden" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-volume-up fa-4x" aria-hidden="true"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-volume-up" style="font-size:20px;"aria-hidden="true"></i>&nbsp;&nbsp;'+files[i].fname+'</div></div></div>';
+			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div>'+fileOptions+'</div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-volume-up fa-4x" aria-hidden="true"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-volume-up" style="font-size:20px;"aria-hidden="true"></i>&nbsp;&nbsp;'+files[i].fname+'</div></div></div>';
 		
 		else if(ext == "mp4" || ext == "webm" || ext == "mkv")
-			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal"  data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete hidden" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-film" aria-hidden="true" style="font-size:64px;color:red"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-film" style="font-size:20px; " aria-hidden="true"></i>&nbsp;&nbsp;'+files[i].fname+'</div></div></div>';		
+			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal"  data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div>'+fileOptions+'</div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-film" aria-hidden="true" style="font-size:64px;color:red"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-film" style="font-size:20px; " aria-hidden="true"></i>&nbsp;&nbsp;'+files[i].fname+'</div></div></div>';		
 		
 		else if(ext == 'pdf' || ext == 'odf')
-			div2 = '<div id="pdf_'+i+'" class="fileBody" data-toggle="modal"  data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete hidden" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-file-pdf-o" aria-hidden="true" style="font-size:64px;color:red"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-file-pdf-o" aria-hidden="true" style="font-size:20px; color:red"></i>&nbsp;&nbsp;'+files[i].fname+'</div></div></div>';
+			div2 = '<div id="pdf_'+i+'" class="fileBody" data-toggle="modal"  data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div>'+fileOptions+'</div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-file-pdf-o" aria-hidden="true" style="font-size:64px;color:red"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-file-pdf-o" aria-hidden="true" style="font-size:20px; color:red"></i>&nbsp;&nbsp;'+files[i].fname+'</div></div></div>';
 		
 		else if(ext== 'doc' || ext == 'docx' || ext =="txt" || ext == "html" || ext=="xml" || ext == "rtf")
-			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete hidden" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-file-text"  fa-4x style="font-size:64px;color:blue;" aria-hidden="true"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-file-text" style="font-size:20px; color:blue;" aria-hidden="true"></i>&nbsp;&nbsp;'+files[i].fname+'</div></div></div>';
+			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div>'+fileOptions+'</div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-file-text"  fa-4x style="font-size:64px;color:blue;" aria-hidden="true"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-file-text" style="font-size:20px; color:blue;" aria-hidden="true"></i>&nbsp;&nbsp;'+files[i].fname+'</div></div></div>';
 		
 		else
-			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div><div class="fileOptions"><center><span class="downloads hidden"  data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="comments hidden"   data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete hidden" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></span></center></div></div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-files-o"  fa-4x style="font-size:64px;color:blue;" aria-hidden="true"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-files-o" style="font-size:20px; color:blue;" aria-hidden="true"></i>&nbsp;&nbsp;'+files[i].fname+'</div></div></div>';			
+			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div>'+fileOptions+'</div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-files-o"  fa-4x style="font-size:64px;color:blue;" aria-hidden="true"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-files-o" style="font-size:20px; color:blue;" aria-hidden="true"></i>&nbsp;&nbsp;'+files[i].fname+'</div></div></div>';			
 		
 		div = div +'<div class="file">'+sharebox+div2+'</div>';
 	}
@@ -201,10 +204,10 @@ function guestOptions(permissions)
 		switch(permissions[i])
 		{
 			case 'addFiles':  $('#guest_'+permissions[i]).prop('checked', true); $('#btn-addFiles').show(); $('.addFilesbox').show();  break;
-			case 'comments':  $('.comments').show(); $('.commentsbox').show(); $('.dcomments').show(); break;
+			case 'comments':  $('.dcomments').show(); $('#newComment').show(); break;
 			case 'downloads': $('.downloads').show(); $('.downloadsbox').show();  break;
 			case 'share':     $('#btn-shareFiles').show();  break;
-			case 'delete': 	  $('.delete').show(); $('.deletebox').show();   
+			case 'delete': 	  $('.delete').show();   
 		}
 	}
 }
@@ -245,19 +248,29 @@ $(document).on("mouseleave", ".fileHover", function() {
 
 $(document).on("click", ".downloads", function(event) {
 	event.stopPropagation();
-	var fname = $($(this).parent().parent().prev()).text(); // this gets the file name from fileTitle class
+	var fname = $($(this).parent().parent().parent().prev()).text(); // this gets the file name from fileTitle class
 	url = '/downloads/'+folderName+'/'+fname;
-	var dwindow = window.open(url,'location=no');
-
+	$.ajax({
+    type: "GET",
+    url: url,
+    success: function(data, textStatus) {
+    	console.log(data);
+       if(data == "error")
+       		showNotification("Error : File Not Found !!");
+       else
+       	window.open(data,'_blank');
+	}
+	});
 });
 
 $(document).on("click", ".delete", function(event) {
 	event.stopPropagation();
 	var fname, data={};
-	var id = this.id;
+	var id;
 	var arr = [];
 	if(this.id)
 	{
+		alert(this.id);
 		arr = (this.id).split('_');
 		if(arr.length == 4)
 		{
@@ -275,7 +288,7 @@ $(document).on("click", ".delete", function(event) {
 	}
 	else
 	{
-		fname = $($(this).parent().parent().prev()).text();
+		fname = $($(this).parent().parent().parent().prev()).text();
 		data  = {'fname':fname};
 	}
 	url = '/delete/'+dropName;
@@ -284,10 +297,16 @@ $(document).on("click", ".delete", function(event) {
     url: url,
     data : data,
     success: function(data, textStatus) {
-       if(data == "success")
+       alert(data);
+       if(data == "success" || data == "reload")
        		location.reload();
        else if(data == "comments")
-       		$('#commentContent_'+arr[1]).remove();
+       {
+       		comments[arr[3]] = "";
+       		alert('#commentContent_'+arr[3]);
+       		$('#commentContent_'+arr[3]).remove();
+       		showNotification("Comment Deleted");
+       }
        else
        		alert("Curse Us!! not deleted due to some internal problem");
     }
@@ -309,6 +328,8 @@ $(document).on("click", ".fileBody", function() {
 		comments = images[(this.id).split('Images_')[1]].comments;
 		id = images[(this.id).split('Images_')[1]]._id;
 		$('#imgsrc').attr('src','/uploads/'+folderName+'/'+fname);
+		// var url = '/uploads/'+folderName+'/'+fname;
+		// $('.image').css("background-image", "url("+url+")");
     }
     else if(this.id.search("Video_")==0)
     {
@@ -403,21 +424,29 @@ function addcomments(comments, id, type)
 	var div = '<div class="commentsList">';
 	for(var i=0; i<comments.length; i++)
 	{
+		if(comments[i] == "")
+			continue;
 		var timestamp = comments[i]._id.toString().substring(0,8);
 		var date = new Date( parseInt( timestamp, 16 ) * 1000 );
 		var time = moment(date).format('ddd DD-MM-YYYY hh:mm A');
 		comments[i].comment =  comments[i].comment.replace(/\r?\n/g, "<br>");
-		var comm = '<div id="commentContent_'+id+'" class="commentContent"><hr><b>'+comments[i].name+'</b> :<br>'+comments[i].comment+'<br><div class="Time">'+time+'&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete" id="'+type+'_'+id+'_comment_'+i+'" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></span></div></div>';
+		var comm = '<div id="commentContent_'+i+'" class="commentContent"><hr><b>'+comments[i].name+'</b> :<br>'+comments[i].comment+'<br><div class="Time">'+time+'&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete" id="'+type+'_'+id+'_comment_'+i+'" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></span></div></div>';
 		div = div + comm;
 	}
 	div = div + "</div>"
 	$( ".dcomments" ).append(div);
-	var newcomm = '<div class="newComment"><hr><textarea  class="form-control" id="comment_name" rows="1" placeholder="Give your Name (Optional)"></textarea><br><textarea  class="commentInput form-control" id="comment" onkeyup="textAreaAdjust(this)" rows="1" placeholder="Add a new comment" required></textarea><br><input type="hidden" id="comment_type" value="'+type+'"><input type="hidden" id="comment_id" value="'+id+'"><button type="button" onclick="submitNewComment()" class="btn btn-default">Add this Comment</button></div>';
+	var newcomm;
+	if(role == "admin")
+		newcomm = '<div class="newComment"><hr><textarea  class="form-control" id="comment_name" rows="1" placeholder="Give your Name (Optional)"></textarea><br><textarea  class="commentInput form-control" id="comment" onkeyup="textAreaAdjust(this)" rows="1" placeholder="Add a new comment" required></textarea><br><input type="hidden" id="comment_type" value="'+type+'"><input type="hidden" id="comment_id" value="'+id+'"><button type="button" onclick="submitNewComment()" class="btn btn-default">Add this Comment</button></div>';
 	$( ".dcomments" ).append(newcomm);
 }
 
 function submitNewComment()
 {
+	if(!$("#comment").valid())
+	{
+		alert("QAESDGFBN");
+	}
 	var type = $("#comment_type").val();
 	var name = $("#comment_name").val();
 	var comment = $("#comment").val();
@@ -430,7 +459,11 @@ function submitNewComment()
     url: url,
     data : {'name':name, 'type':type, 'comment':comment},
     success: function(data, textStatus) {
-       if(data != "fail")
+    	if(data == "permission")
+    		showNotification("Error : Permission Denied !!");
+    	if(data == "error")
+    		showNotification("Oops, Internal problem !!");
+       else
        {
        		var newComment =  {'_id':data, 'name':name, 'comment':comment};
        		comments.push(newComment);
@@ -440,14 +473,13 @@ function submitNewComment()
 			var time = moment(date).format('ddd DD-MM-YYYY hh:mm A');
 			
 			var i = comments.length-1;
-			var comm = '<div id="commentContent_'+id+'" class="commentContent"><hr><b>'+comments[i].name+'</b> :<br>'+comments[i].comment+'<br><div class="Time">'+time+'&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete" id="'+type+'_'+id+'_comment_'+i+'" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></span></div></div>';
+			var comm = '<div id="commentContent_'+i+'" class="commentContent"><hr><b>'+comments[i].name+'</b> :<br>'+comments[i].comment+'<br><div class="Time">'+time+'&nbsp;&nbsp;&nbsp;&nbsp;<span class="delete" id="'+type+'_'+id+'_comment_'+i+'" data-toggle="tooltip" data-placement="bottom" title="Delete"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></span></div></div>';
        		
        		$(".commentsList").append(comm);
        		$("#comment_name").val("");
        		$("#comment").val("");
+       		showNotification("New Comment Added !!");
        }
-       else
-       	alert("Curse Us!! Comment not added due to some internal problem");
     }
 	});
 
@@ -458,7 +490,7 @@ $('#fileviewModal').on('hide.bs.modal', function (e) {
     $("#playaudio").attr('src','');
 });
 
-$(document).on('click', '#selectFiles', function(event){ event.stopPropagation(); $('.file .shareBox').show()});
+$(document).on('click', '#selectFiles', function(event){ event.stopPropagation(); $('.file .shareBox').toggle()});
 
 $(document).on('click', '#emailFiles', function(event){
 	event.stopPropagation();
@@ -504,23 +536,17 @@ $(document).on('click', '#emailFiles', function(event){
 $(document).on('click','#sharableLink', function() {
 	  $(this).select();
 	  document.execCommand("copy");
-	  alert("Copied to the clipboard : " + $(this).html());
+	  showNotification("URL Copied");
 });
 
 
-// $(document).bind("contextmenu",function(e) { 
-// 	e.preventDefault();
-// });
+function showNotification(msg)
+{
+	$('.notification').show();
+	$('#notifyMsg').html(msg);
+	setTimeout(function() {$('.notification').hide()}, 5000);
 
-// $(document).keydown(function(e){
-//     if(e.which === 123){
- 
-//        return false;
- 
-//     }
- 
-// });
-
+}
 
 var $fileInput = $('.file-input');
 var $droparea = $('.file-drop-area');

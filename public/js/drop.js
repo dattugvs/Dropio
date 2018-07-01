@@ -52,13 +52,14 @@ function getFiles()
 function showNotes(notes, title)
 {
 	if(!notes.length) return;
-	var div = '<div class="fileList col-md-12"><div class="filesType col-md-12"><i class="fa fa-picture-o fa-2x" aria-hidden="true"></i>&nbsp;<span><b>'+title+'</b></span></div><div class="col rfiles col-md-12">';
+	var div = '<div class="fileList col-md-12"><div class="filesType col-md-12"><span><b>'+title+'</b></span></div><div class="col rfiles col-md-12">';
 	for(var i=0; i<notes.length; i++)
 	{
 		var div2;
 		var timestamp = notes[i]._id.toString().substring(0,8);
 		var date = new Date( parseInt( timestamp, 16 ) * 1000 );
 		var time = moment(date).format('ddd DD-MM-YYYY hh:mm A');	
+		alert(notes[i].notes);
 		div2 = '<div class="dnotes" col-md-12" style="cursor:default;"><br><h5>'+notes[i].title+'</h5>'+notes[i].notes+'<br><br><div class="notesDetails">'+time+'<span style="display:inline-block; width: 20px;"></span><span class="comments fileBody hidden" style="border:none;" id="Notes_'+i+'" data-placement="bottom" title="Comment" data-toggle="modal" data-target="#fileviewModal"><i class="fa fa-commenting-o" style="font-size:25px;" aria-hidden="true"></i></span><span style="display:inline-block; width: 30px;"></span><span class="delete hidden" id="notes_'+i+'" data-toggle="tooltip" data-placement="bottom" title="Delete Notes"><i class="fa fa-trash-o fa-x" style="font-size:25px;" aria-hidden="true"></i></span></div></div>';
 		div = div + div2+'<hr>';
 	}
@@ -66,105 +67,76 @@ function showNotes(notes, title)
 	$('.dfiles').append(div);
 }
 
-function showFiles(files, title)
+function showFiles(title, files)
 {
 	if(!files.length) return;
 
 	var div = '<div class="fileList col-md-12"><div class="filesType col-md-12"><i class="fa fa-picture-o fa-2x" aria-hidden="true"></i>&nbsp;<span><b>'+title+'</b></span></div><div class="row rfiles col-md-12">';
+	
 	for(var i=0; i<files.length; i++)
 	{
 		var div2;
 		var checkbox = '<center><label class="checkbox"><input type="checkbox" name="fileSelect" value = "'+files[i].fname+'"><span class="checkmark"></span></label></center>';
 		var sharebox = '<br><div class="shareBox hidden" id="box_'+i+'">'+checkbox+'</div><br>'; 
-		var arr = files[i].fname.split('.');
-		var ext = (arr[arr.length-1]).toLowerCase();
-
+		var fname = files[i].fname.substring(files[i].fname.indexOf("/")+1, files[i].fname.length);
 		var fileOptions = '<div class="col-md-12 fileOptions"><center><div class="row"><div class="downloads hidden col"><span data-toggle="tooltip" data-placement="bottom" title="Download"><i class="fa fa-arrow-circle-o-down fa-2x" aria-hidden="true"></i></span></div><div class="comments col"><span  data-toggle="tooltip" data-placement="bottom" title="Comment"><i class="fa fa-commenting-o fa-2x" aria-hidden="true"></i></span></div><div class="delete hidden col"><span data-toggle="tooltip" data-placement="bottom" title="Delete File"><i class="fa fa-trash-o fa-2x" aria-hidden="true"></i></span></div></div></center></div>';
-
-		if(ext == 'jpg' || ext == 'png' || ext == 'jpeg' || ext == 'bmp' || ext == 'gif')
+		var icon;
+		switch(title)
 		{
-			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div>'+fileOptions+'</div><div id="fileview_'+title+'_'+i+'" class="fileview"><img src="/uploads/'+folderName+'/'+files[i].fname+'" width="200px" height="150px"></div></div>';
+			case "Audio": 			icon = "fa fa-volume-up"; break;
+			case "Video": 			icon = "fa fa-film"; break;
+			case "PDF"  : 			icon = "fa fa-file-pdf-o"; break;
+			case "Application" : 	icon = "fa fa-files-o"; break;
+			case "Text" : 			icon = "fa fa-files-o"; break;
+			case "Others": 			icon = "fa fa-files-o";
 		}
-		
-		else if(ext == 'mp3' || ext=="ogg" || ext=="wav")
-			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div>'+fileOptions+'</div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-volume-up fa-4x" aria-hidden="true"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-volume-up" style="font-size:20px;"aria-hidden="true"></i>&nbsp;&nbsp;'+files[i].fname+'</div></div></div>';
-		
-		else if(ext == "mp4" || ext == "webm" || ext == "mkv")
-			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal"  data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div>'+fileOptions+'</div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-film" aria-hidden="true" style="font-size:64px;color:red"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-film" style="font-size:20px; " aria-hidden="true"></i>&nbsp;&nbsp;'+files[i].fname+'</div></div></div>';		
-		
-		else if(ext == 'pdf' || ext == 'odf')
-			div2 = '<div id="pdf_'+i+'" class="fileBody" data-toggle="modal"  data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div>'+fileOptions+'</div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-file-pdf-o" aria-hidden="true" style="font-size:64px;color:red"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-file-pdf-o" aria-hidden="true" style="font-size:20px; color:red"></i>&nbsp;&nbsp;'+files[i].fname+'</div></div></div>';
-		
-		else if(ext== 'doc' || ext == 'docx' || ext =="txt" || ext == "html" || ext=="xml" || ext == "rtf")
-			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div>'+fileOptions+'</div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-file-text"  fa-4x style="font-size:64px;color:blue;" aria-hidden="true"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-file-text" style="font-size:20px; color:blue;" aria-hidden="true"></i>&nbsp;&nbsp;'+files[i].fname+'</div></div></div>';
-		
+		if(title == "Images")
+			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle hidden">'+files[i].fname+'</div>'+fileOptions+'</div><div id="fileview_'+title+'_'+i+'" class="fileview"><img src="/uploads/'+folderName+'/'+files[i].fname+'" width="200px" height="150px"></div></div>';
 		else
-			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle">'+files[i].fname+'</div>'+fileOptions+'</div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="fa fa-files-o"  fa-4x style="font-size:64px;color:blue;" aria-hidden="true"></i></center><div class="preview">&nbsp;&nbsp;<i class="fa fa-files-o" style="font-size:20px; color:blue;" aria-hidden="true"></i>&nbsp;&nbsp;'+files[i].fname+'</div></div></div>';			
-		
+		{
+			div2 = '<div id="'+title+'_'+i+'" class="fileBody" data-toggle="modal" data-target="#fileviewModal"><div id="fileHover_'+title+'_'+i+'" class="fileHover hidden"><div class="fileTitle hidden">'+files[i].fname+'</div>'+fileOptions+'</div><div id="fileview_'+title+'_'+i+'" class="fileview"><center><br><i class="'+icon+' fa-4x" aria-hidden="true"></i></center><div class="preview">&nbsp;&nbsp;<i class="'+icon+'" style="font-size:20px;"aria-hidden="true"></i>&nbsp;&nbsp;'+fname+'</div></div></div>';
+		}
 		div = div +'<div class="file">'+sharebox+div2+'</div>';
 	}
 	div = div + '</div></div><div style="clear:both;"></div><br>';
 	$('.dfiles').append(div);
 }
 
-var images = [];
-var docs   = [];
-var audio  = [];
-var video  = [];
-var others = [];
-var pdf    = [];
+var images = [],
+	audio  = [],
+	video  = [],
+	others = [],
+	application = [],
+	text = [],
+	pdf = [];
 
 function Media()
 {
-	images = [];
-	docs   = [];
-	audio  = [];
-	video  = [];
-	others = [];
 	asort('fname');
 	$('.dfiles').html('');
 	for(var i=0; i<files.length; i++)
 	{
-		arr = files[i].fname.split('.');
+		var type = files[i].fname.substring(0,files[i].fname.indexOf("/"))
 
-		switch(arr[arr.length-1].toLowerCase())
+		switch(type)
 		{
-			case 'jpg':
-			case 'png':
-			case 'jpeg':
-			case 'bmp':
-			case 'gif': 	images.push(files[i]); break;
-
-			case 'mp3':
-			case 'ogg':
-			case 'wav': 	audio.push(files[i]); break;
-
-			case 'mp4':
-			case 'webm':
-			case 'mkv': 	video.push(files[i]); break;
-
-			case 'pdf':
-			case 'odf': 	pdf.push(files[i]); break;
-
-			case 'doc':
-			case 'docx':
-			case 'rtf':
-			case 'txt':
-			case 'html':
-			case 'xml': 	docs.push(files[i]); break;
-
-			default : others.push(files[i]); break;
-		}	
+			case 'image' 		: images.push(files[i]); break;
+			case 'audio' 		: audio.push(files[i]); break;
+			case 'video' 		: video.push(files[i]); break;
+			// case 'pdf' 		: pdf.push(files[i]); break;
+			case 'text' 	 	: text.push(files[i]); break;
+			case 'application'  : application.push(files[i]); break; 	
+			default  			: others.push(files[i]); break;
+		}
 	}
-	var len = pdf.length;
-	for(var i=0; i<docs.length; i++)
-		pdf.push(docs[i]);
-	showNotes(notes,'Notes');
-	showFiles(images,'Images');
-	showFiles(audio, 'Audio');
-	showFiles(video, 'Video');
-	showFiles(pdf, 'Documents');
-	showFiles(others, 'Others');
+	showNotes(notes,'Notes'); // displays all notes
+	showFiles("Images", images);
+	showFiles("Audio", audio);
+	showFiles("Video", video);
+	showFiles("PDF", pdf);
+	showFiles("Text", text);
+	showFiles("Application", application);
+	showFiles("Others", others);
 	showSharedDrops(shared);
 	//alert(role);
 	checkboxList(guests);
@@ -204,7 +176,7 @@ function guestOptions(permissions)
 		switch(permissions[i])
 		{
 			case 'addFiles':  $('#guest_'+permissions[i]).prop('checked', true); $('#btn-addFiles').show(); $('.addFilesbox').show();  break;
-			case 'comments':  $('.dcomments').show(); $('#newComment').show(); break;
+			case 'comments':  $('.dcomments').show(); $('.comments').show(); $('#newComment').show(); break;
 			case 'downloads': $('.downloads').show(); $('.downloadsbox').show();  break;
 			case 'share':     $('#btn-shareFiles').show();  break;
 			case 'delete': 	  $('.delete').show();   
@@ -248,11 +220,16 @@ $(document).on("mouseleave", ".fileHover", function() {
 
 $(document).on("click", ".downloads", function(event) {
 	event.stopPropagation();
-	var fname = $($(this).parent().parent().parent().prev()).text(); // this gets the file name from fileTitle class
-	url = '/downloads/'+folderName+'/'+fname;
+	var fname = $($(this).parent().parent().parent().prev()).text(); // this gets the file name from fileTitle hidden class
+	url = "/downloads";
+	var data = {};
+	alert(drop.drop);
+	data['drop'] = drop.drop;
+	data['file'] = folderName+'/'+fname;
 	$.ajax({
-    type: "GET",
+    type: "POST",
     url: url,
+    data : data,
     success: function(data, textStatus) {
     	console.log(data);
        if(data == "error")
@@ -289,7 +266,8 @@ $(document).on("click", ".delete", function(event) {
 	else
 	{
 		fname = $($(this).parent().parent().parent().prev()).text();
-		data  = {'fname':fname};
+		alert(fname);
+		data  = {'fname':fname}
 	}
 	url = '/delete/'+dropName;
 	$.ajax({
@@ -316,7 +294,8 @@ $(document).on("click", ".delete", function(event) {
 var comments = [];
 $(document).on("click", ".fileBody", function() {
 	var fname, id, type="files"; 
-    if(this.id.search("Images")==0)
+	alert(this.id);
+	if(this.id.search("Images_")==0)
     {
     	$('.image').show();
     	$('.video').hide();
@@ -364,7 +343,7 @@ $(document).on("click", ".fileBody", function() {
     	playme.load();
 
     }
-    else if(this.id.search("pdf")==0)
+    else if(this.id.search("PDF_")==0)
     {
     	$('.image').hide();
     	$('.video').hide();
@@ -372,12 +351,27 @@ $(document).on("click", ".fileBody", function() {
     	$('.pdf').show();
     	$('.doc').hide();
     	var src = '/pdfjs/web/viewer.html?file=../../../uploads/';
-    	fname = pdf[(this.id).split('pdf_')[1]].fname;
-		comments = pdf[(this.id).split('pdf_')[1]].comments;
-		id = pdf[(this.id).split('pdf_')[1]]._id;
+    	fname = pdf[(this.id).split('PDF_')[1]].fname;
+		comments = pdf[(this.id).split('PDF_')[1]].comments;
+		id = pdf[(this.id).split('PDF_')[1]]._id;
     	src = src + dropName+'/'+fname;
     	$('#pdfsrc').attr('src',src);
     	$('.modal-content').css('width','840px');
+    }
+    else if(this.id.search("text_")==0)
+    {
+  //   	$('.image').hide();
+  //   	$('.video').hide();
+  //   	$('.audio').hide();
+  //   	$('.pdf').show();
+  //   	$('.doc').hide();
+  //   	var src = '/pdfjs/web/viewer.html?file=../../../uploads/';
+  //   	fname = pdf[(this.id).split('Text_')[1]].fname;
+		// comments = pdf[(this.id).split('Text_')[1]].comments;
+		// id = pdf[(this.id).split('Text_')[1]]._id;
+  //   	src = src + dropName+'/'+fname;
+  //   	$('#pdfsrc').attr('src',src);
+    	$('.modal-content').css('width','400px');
     }
     else
     {
@@ -388,14 +382,14 @@ $(document).on("click", ".fileBody", function() {
     	$('.doc').show();
     	$('.modal-content').css('width','600px');
     	var text;
-		if(this.id.search("Documents")==0)
+		if(this.id.search("Application_")==0)
 		{
-			fname = pdf[(this.id).split('Documents_')[1]].fname;
-			comments = pdf[(this.id).split('Documents_')[1]].comments;
-			id = pdf[(this.id).split('Documents_')[1]]._id;
+			fname = application[(this.id).split('Documents_')[1]].fname;
+			comments = application[(this.id).split('Documents_')[1]].comments;
+			id = application[(this.id).split('Documents_')[1]]._id;
 			text = "<h4>File Name : " + fname+'</h4><br>';
 		}
-		else if(this.id.search("Others")==0)
+		else if(this.id.search("Others_")==0)
 		{
 			fname = others[(this.id).split('Others_')[1]].fname;
 			comments = others[(this.id).split('Others_')[1]].comments;
@@ -405,14 +399,13 @@ $(document).on("click", ".fileBody", function() {
 		else
 		{
 			var note = notes[(this.id).split('Notes_')[1]];
-			text = "Notes : <h5>"+note.title+'</h5>'+note.notes+'<br>';
+			text     = "Notes : <h5>"+note.title+'</h5>'+note.notes+'<br>';
 			comments = note.comments;
 			id 		 = note._id;
-			type = "notes";
+			type     = "notes";
 		}
 		$(".doc div").html(text);
     }
-   	
 
 	addcomments(comments, id, type);
 
@@ -443,13 +436,20 @@ function addcomments(comments, id, type)
 
 function submitNewComment()
 {
-	if(!$("#comment").valid())
-	{
-		alert("QAESDGFBN");
-	}
 	var type = $("#comment_type").val();
 	var name = $("#comment_name").val();
+	if(name.length == 0)
+	{
+		name = "Anonymous";
+	}
 	var comment = $("#comment").val();
+	alert(comment);
+	if(comment.length ==0)
+	{
+		showNotification("Please Add a Comment !!");
+		$("#comment").focus();
+		return false;
+	}
 	var id = $("#comment_id").val();
 	//alert(id);
 	var url = '/comments/'+dropName+'/'+id;
@@ -539,12 +539,15 @@ $(document).on('click','#sharableLink', function() {
 	  showNotification("URL Copied");
 });
 
+$('.close').on('click', () => {
+	$('.notification').hide();
+});
 
 function showNotification(msg)
 {
 	$('.notification').show();
 	$('#notifyMsg').html(msg);
-	setTimeout(function() {$('.notification').hide()}, 5000);
+	setTimeout(function() {$('.notification').hide()}, 3000);
 
 }
 

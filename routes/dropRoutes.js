@@ -2,6 +2,9 @@ var models = require('../models/schema');
 var LocalStrategy = require('passport-local').Strategy;
 var bcrypt = require('bcrypt-nodejs');
 
+var AWS 	= require('aws-sdk');
+AWS.config.loadFromPath('./config/aws-config.json');
+var s3 = new AWS.S3();
 module.exports = function (app, passport)
 {
 	
@@ -79,17 +82,31 @@ module.exports = function (app, passport)
 						else
 							loginReq = true; // other drop (not shared) loginReq required
 					}
-					else // not logged in... loginReq may require
+					else
 						loginReq = true;
 
 					if(loginReq)
 						res.render('login', {data:dropAuth, message:req.flash('loginMessage')});
 					else
+					{
+						
 						res.render('drop',{'drop':JSON.stringify(drop), 'role':role, 'dropAuth':dropAuth, 'message':req.flash('dropMessage')});
+					}
 				}
 			});
 		});
 	});
+
+	function getImageURL(key)
+	{
+		var urlParams = {Bucket: 'drop.io', Key: key};
+		s3.getSignedUrl('getObject',urlParams, function(err, url){
+			if(err)
+				return "error";
+			else
+				return url;					    	 
+		});
+	}
 
 	app.post('/saveLogin/:drop', (req, res) => 
 	{

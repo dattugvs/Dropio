@@ -8,11 +8,11 @@ var s3 = new AWS.S3();
 
 module.exports = function (app)
 {
-	app.get('/downloads/:drop/:file', (req,res, next)=> 
+	app.post('/downloads', (req,res, next)=> 
 	{
 		var downloadFile = false;
 		if(!req.user)
-			res.redirect('/drop.io/'+req.params.drop);
+			res.redirect('/drop.io/'+req.body.drop);
 		else
 		{
 			if(req.user.role == "admin")
@@ -26,10 +26,9 @@ module.exports = function (app)
 			}
 			else
 			{
-				var urlParams = {Bucket: 'drop.io', Key: req.params.drop+"/"+req.params.file, Expires: 10};
+				var urlParams = {Bucket: 'drop.io', Key: req.body.file, Expires: 10};
 				s3.getSignedUrl('getObject', urlParams, function(err, url){
-				  	console.log('url :', url);
-				  	s3.getObject({Bucket: 'drop.io', Key: req.params.drop+"/"+req.params.file}, function(err, data) {
+				  	s3.getObject({Bucket: 'drop.io', Key: req.body.file}, function(err, data) {
 					    if (err)
 					        res.send("error")
 					    else
@@ -117,17 +116,14 @@ module.exports = function (app)
 		{
 			var query1 = {'drop':req.params.drop};
 			var query2 = {'files':{'fname':req.body.fname}};
-			fs.unlink('./public/uploads/'+req.params.drop+'/'+req.body.fname, (err) =>
-			{
-			  	if(err)
-			  	{
-			  		console.log("\nerror in file delete\n");
-			  		res.end("fail");
-			  	}
-			  	else
-			  	{
-			  		console.log('successfully deleted'+req.params.drop+'/'+req.body.fname);
-			  	}
+			var params = {
+			  Bucket: 'drop.io', 
+			  Delete: {Objects: [{ Key: req.params.drop+'/'+req.body.fname }]},
+			};
+
+			s3.deleteObjects(params, function(err, data) {
+			  if (err) console.log(err, err.stack); // an error occurred
+			  else     console.log(data);           // successful response
 			});
 		}
 		else

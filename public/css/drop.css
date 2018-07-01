@@ -217,9 +217,5 @@ progress::-webkit-progress-value {
   bottom: 5px;
   left:65%;
   width: 30%;
-  z-index : 100;
-}
-
-#notifyMsg {
-  
+  z-index : 1050;
 }

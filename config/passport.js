@@ -14,8 +14,7 @@ module.exports = function (passport) {
 	passport.deserializeUser(function(req, idwithRole, done) {
 		var id = {'_id': idwithRole.split(' ')[0] };
 		var role = idwithRole.split(' ')[1];
-        console.log(idwithRole);
-		models.Drop.findById(id, function(err, user) {	
+        models.Drop.findById(id, function(err, user) {	
         	user.role=role;
         	done(err, user);
         });
